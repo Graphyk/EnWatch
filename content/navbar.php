@@ -1,4 +1,5 @@
 <navbar class='bg-[#1CD4E1] h-[45px] px-[20px] inline-block flex justify-between items-center font-[MuseoModerno]'>
+    
     <div class='flex items-center'>
         <div class='flex items-center'>
         <div class='text-[40px] text-[#643CCE] hidden md:inline-block'>EnWatch</div>
