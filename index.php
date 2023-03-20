@@ -17,12 +17,12 @@
         include("content/navbar.php");
     ?>  
     <!-- main container -->
-    <div class='bg-[#1F1E1D] text-[#1CD4E1] flex flex-col'>
-        <div class='px-[20px] gap-[20px] flex flex-col font-[Kodchasan]  pt-[100px] '>
-            <span class='text-[32px] lg:text-[64px]'>Bonjour,</span>
-            <span class='inline-block lg:text-[48px] ml-[15vw]'>Que voulez vous regarder ?</span>
+    <div class='bg-[#33312E] text-[#1CD4E1] flex flex-col'>
+        <div class='ml-5 lg:ml-20 flex flex-col font-[Kodchasan]  pt-[100px] '>
+            <span class='text-[32px] lg:text-[48px]'>Bonjour,</span>
+            <span class='inline-block lg:text-[32px] ml-[15vw]'>Que voulez vous regarder ?</span>
         </div>
-        <span class='font-[Roboto] lg:text-[32px] inline-block ml-4 mt-5'>Nouveautés</span>
+        <span class='font-[Roboto] ml-5 lg:text-[24px] inline-block lg:ml-20 mt-5'>Nouveautés</span>
         <div id="default-carousel" class="relative w-full h-[40vw] lg:h-[24vw]" data-carousel="static">
             <!-- Carousel wrapper -->
             <div class="relative h-[40vw] overflow-hidden rounded-lg ">
@@ -149,7 +149,7 @@
                 </span>
             </button>
         </div>
-        <span class='font-[Roboto] lg:text-[32px] inline-block ml-4 mt-5'>Réalisateurs à la une</span>
+        <span class='font-[Roboto] ml-5 lg:text-[24px] inline-block lg:ml-20 mt-5'>Réalisateurs à la une</span>
         <div id="default-carousel" class="relative w-full h-[40vw] lg:h-[26vw]" data-carousel="static">
             <!-- Carousel wrapper -->
             <div class="relative h-[40vw] overflow-hidden rounded-lg ">
@@ -387,7 +387,7 @@
                 </span>
             </button>
         </div>
-        <span class='font-[Roboto] lg:text-[32px] inline-block ml-4 mt-5'>Acteurs à la une</span>
+        <span class='font-[Roboto] ml-5 lg:text-[24px] inline-block lg:ml-20 mt-5'>Acteurs à la une</span>
         <div id="default-carousel" class="relative w-full h-[40vw] lg:h-[20vw] mb-10" data-carousel="static">
             <!-- Carousel wrapper -->
             <div class="relative h-[40vw] lg:h-[18vw] overflow-hidden rounded-lg ">
