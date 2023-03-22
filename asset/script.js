@@ -6,6 +6,9 @@ const dropdownBtn3 = document.getElementById("dropbtn3");
 const dropdownMenu3 = document.getElementById("dropmenu3");
 const burgerBtn = document.getElementById("OpenBtn");
 const burgerMenu = document.getElementById("burgerMenu");
+const hide = document.getElementById("cacher");
+const show = document.getElementById("voirPlus");
+const desc = document.getElementById("description")
 
 function toggleNav(menu){
     
@@ -30,10 +33,17 @@ function toggleDrop(menu){
         }
     }
     menu.classList.toggle("-translate-y-[300%]");
-    menu.classList.toggle("z-20");
+    menu.classList.toggle("z-50");
     menu.classList.toggle("-z-10");
+}
+function showMore(button,description){
+    button.classList.toggle("hidden");
+    description.classList.toggle("overflow-hidden");
+    description.classList.toggle("h-[30vw]");
 }
 dropdownBtn1.addEventListener("click", () => { toggleDrop(dropdownMenu1);});
 dropdownBtn2.addEventListener("click", () => { toggleDrop(dropdownMenu2);});
 dropdownBtn3.addEventListener("click", () => { toggleDrop(dropdownMenu3);});
 burgerBtn.addEventListener("click", () => { toggleNav(burgerMenu);});
+show.addEventListener("click",() =>{showMore(show,desc);});
+hide.addEventListener("click",() =>{showMore(show,desc);});

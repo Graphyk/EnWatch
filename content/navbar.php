@@ -4,7 +4,7 @@
             <div class='md:text-[24px] lg:text-[40px] text-[#643CCE] hidden md:inline-block'>EnWatch</div>
             <img src="/ENWATCH/asset/img/logos/33312E.png" class='w-[35px] ml-[5px] h-[35px] inline-block'>
         </a>
-            <div id='burgerMenu' class='translate-x-[100%] md:translate-x-[0px] bg-[#1CD4E1] md:flex flex-col items-end top-[8.7%] hidden  md:z-auto absolute right-0 md:static text-[12px]  lg:text-[24px] flex md:flex-row ml-[50px] gap-[30px]'>
+            <div id='burgerMenu' class='translate-x-[100%] z-20 md:translate-x-[0px] ease-out bg-[#1CD4E1] md:flex flex-col items-end top-[8.7%] hidden  md:z-auto absolute right-0 md:static text-[12px]  lg:text-[24px] flex md:flex-row ml-[50px] gap-[30px]'>
                 <span class='flex gap-[5px]'><a href='/enwatch/content/catalogue.php'>Films</a><span id='dropbtn1' class='relative inline-block cursor-pointer -mt-[5px]'>
                 <div id='dropmenu1' class='bg-[#643CCE] -z-10 md:ease-out md:duration-500 -translate-y-[300%] w-[15vw] md:w-[20vw] flex flex-col md:flex-row items-center absolute top-[20px] md:top-[45.5px] md:rounded-b-[10px] -left-[55%] md:-left-[355%] text-[8px] md:text-[16px]'>
                     <div class='flex flex-col w-full md:w-1/2 items-center md:rounded-bl-[10px] border border-solid border-black'>
