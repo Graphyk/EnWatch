@@ -34,7 +34,7 @@
                             <img src="/ENWATCH/asset/img/realisateurs/guillermo_del_toro.webp" alt="Guillermo del toro" class='w-[100px]'>
                             Guillermo Del Toro
                         </a>
-                        <a href='categorie' class='flex flex-col items-center h-[110px]' ]>
+                        <a href='/ENWATCH/content/person.php?person=alfred_hitchcock' class='flex flex-col items-center h-[110px]' ]>
                             <img src="/ENWATCH/asset/img/realisateurs/alfred-hitchcock.jpeg" alt="alfred hitchcock" class='w-[100px]'>
                             Alfred Hitchcock
                         </a>
@@ -56,8 +56,8 @@
             </div>
         </div>
     <div class='hidden md:flex -ml-[12px] text-[16px] flex-col'>
-        <span>Inscription</span>
-        <span class='text-[#8E1CBB]'>Connexion</span>
+        <a href='/ENWATCH/content/inscription.php'>Inscription</a>
+        <a href='/ENWATCH/content/connexion.php' class='text-[#8E1CBB]'>Connexion</a>
     </div>
     <button id='OpenBtn' class='flex flex-col justify-evenly h-[25px] md:hidden'>
         <span class='px-[10px] py-[1px] bg-white'></span>
