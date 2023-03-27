@@ -1,4 +1,4 @@
-<form action='traitement_insc.php' method='post' class='flex flex-col items-center relative z-10 bg-[#F9F9F9] rounded-[10px] pt-[10px] lg:pt-[20px] pb-[20px] lg:pb-[40px] w-[200px] md:w-[400px] lg:w-[500px] font-[Kodchasan] mx-auto my-[20%]'>
+<form action='../traitement/traitement_insc.php' method='post' enctype="multipart/form-data" class='flex flex-col items-center relative z-10 bg-[#F9F9F9] rounded-[10px] pt-[10px] lg:pt-[20px] pb-[20px] lg:pb-[40px] w-[200px] md:w-[400px] lg:w-[500px] font-[Kodchasan] mx-auto my-[20%]'>
     <!-- values:image_uploads
                 pseudo
                 nom
@@ -18,6 +18,10 @@
         <span class='ml-2'>Pseudo</span>
         <input type="text" name='pseudo' class='bg-[#1CD4E1] rounded-[10px] w-full h-[24px] md:h-[30px] lg:h-[36px] border-transparent'>
     </label>
+    <label for="email" class='w-[80%] text-[14px] md:text-[18px] lg:text-[22px] mt-2 md:mt-4'>
+        <span class='ml-2'>Email</span>
+        <input type="email" name='email' class='bg-[#1CD4E1] rounded-[10px] w-full h-[24px] md:h-[30px] lg:h-[36px] border-transparent'>
+    </label>
     <label for="nom" class='w-[80%] text-[14px] md:text-[18px] lg:text-[22px] mt-2 md:mt-4'>
         <span class='ml-2'>Nom</span>
         <input type="text" name='nom' class='bg-[#1CD4E1] rounded-[10px] w-full h-[24px] md:h-[30px] lg:h-[36px] border-transparent'>
@@ -27,7 +31,7 @@
         <input type="text" name='prenom' class='bg-[#1CD4E1] rounded-[10px] w-full h-[24px] md:h-[30px] lg:h-[36px] border-transparent'>
     </label>
     <label for="mdp" class='w-[80%] text-[14px] md:text-[18px] lg:text-[22px] mt-2 md:mt-4'>
-        <span class='ml-2'>Mot de passee</span>
+        <span class='ml-2'>Mot de passe</span>
         <input type="password" name='mdp' class='bg-[#1CD4E1] rounded-[10px] w-full h-[24px] md:h-[30px] lg:h-[36px] border-transparent'>
     </label>
     <label for="verif_mdp" class='w-[80%] text-[14px] md:text-[18px] lg:text-[22px] mt-2 md:mt-4'>

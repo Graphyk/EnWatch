@@ -18,23 +18,21 @@ function toggleNav(menu){
   }
 function toggleDrop(menu){
     if (menu!=dropdownMenu1){
-        if (!dropdownMenu1.className.includes('-translate-y-[300%]')){
-            dropdownMenu1.classList.toggle("-translate-y-[300%]");   
+        if (!dropdownMenu1.className.includes('-translate-y-[1000%]')){
+            dropdownMenu1.classList.toggle("-translate-y-[1000%]");   
         }
     }
     if (menu!=dropdownMenu2){
-        if (!dropdownMenu2.className.includes('-translate-y-[300%]')){
-            dropdownMenu2.classList.toggle("-translate-y-[300%]");
+        if (!dropdownMenu2.className.includes('-translate-y-[1000%]')){
+            dropdownMenu2.classList.toggle("-translate-y-[1000%]");
         }
     }
     if (menu!=dropdownMenu3){
-        if (!dropdownMenu3.className.includes('-translate-y-[300%]')){
-            dropdownMenu3.classList.toggle("-translate-y-[300%]");
+        if (!dropdownMenu3.className.includes('-translate-y-[1000%]')){
+            dropdownMenu3.classList.toggle("-translate-y-[1000%]");
         }
     }
-    menu.classList.toggle("-translate-y-[300%]");
-    menu.classList.toggle("z-50");
-    menu.classList.toggle("-z-10");
+    menu.classList.toggle("-translate-y-[1000%]");
 }
 function showMore(button,description){
     button.classList.toggle("hidden");

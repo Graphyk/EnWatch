@@ -1,5 +1,30 @@
 <?php
 session_start();
+$host = '127.0.0.1';
+$db   = 'enwatch';
+$user = 'root';
+$pass = '';
+$port = "3306";
+$charset = 'utf8mb4';
+
+$options = [
+    \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+    \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+    \PDO::ATTR_EMULATE_PREPARES   => false,
+];
+$dsn = "mysql:host=$host;dbname=$db;charset=$charset;port=$port";
+try {
+    $pdo = new \PDO($dsn, $user, $pass, $options);
+    } catch (\PDOException $e) {
+            throw new \PDOException($e->getMessage(), (int)$e->getCode());
+}
+$sql = "SELECT * FROM `film` limit 25";
+$stmt = $pdo ->prepare($sql);
+$stmt->execute();
+$i=0;
+$sql = "SELECT * FROM `realisateur` order by `id_realisateur`";
+$real = $pdo ->prepare($sql);
+$real->execute();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,101 +57,96 @@ session_start();
                 <!-- Item 1 -->
                 <div class="hidden duration-700 ease-in-out" data-carousel-item>
                     <div class='flex w-[85vw] justify-between items-start h-[32vw] lg:h-[20vw] mx-auto overflow-hidden'>
-                        <div>
-                            <img src="asset/img/affiches/matrix.jpg" class='w-[15vw] hidden lg:inline-block'  alt="matrix">
-                        </div>
-                        <div>
-                            <img src="asset/img/affiches/asterix_et_obelix-l-empire-du-milieu.jfif" class='w-[25vw] lg:w-[15vw]'  alt="asterix et obélix">
-                        </div>
-                        <div>
-                            <img src="asset/img/affiches/gladiator.jpg" class='w-[25vw] lg:w-[15vw]'  alt="Gladiator">
-                        </div>
-                        <div>
-                            <img src="asset/img/affiches/matrix.jpg" class='w-[25vw] lg:w-[15vw]'  alt="matrix">
-                        </div>
-                        <div>
-                            <img src="asset/img/affiches/matrix.jpg" class='w-[15vw] hidden lg:inline-block'  alt="matrix">
-                        </div> 
+                    <?php
+                    for ($i;$i<5;$i++){
+                            $result=$stmt ->fetch(PDO::FETCH_ASSOC,PDO::FETCH_ORI_ABS,$i);
+                            if (($i==0) or ($i==4)){
+                                echo"<div>
+                                    <img src='asset/img/affiches/$result[affiche]' class='w-[15vw] hidden lg:inline-block'  alt='$result[nom]'>
+                                </div>";
+                            }
+                            else{
+                                echo"<div>
+                                    <img src='asset/img/affiches/$result[affiche]' class='w-[25vw] lg:w-[15vw]'  alt='$result[nom]'>
+                                    </div>";
+                            }
+                            
+                            } ?>
                     </div>
                 </div>
                 <!-- Item 2 -->
                 <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                <div class='flex w-[85vw] justify-between items-start h-[32vw] lg:h-[20vw] mx-auto overflow-hidden'>
-                        <div>
-                            <img src="asset/img/affiches/matrix.jpg" class='w-[15vw] hidden lg:inline-block'  alt="matrix">
-                        </div>
-                        <div>
-                            <img src="asset/img/affiches/asterix_et_obelix-l-empire-du-milieu.jfif" class='w-[25vw] lg:w-[15vw]'  alt="asterix et obélix">
-                        </div>
-                        <div>
-                            <img src="asset/img/affiches/gladiator.jpg" class='w-[25vw] lg:w-[15vw]'  alt="Gladiator">
-                        </div>
-                        <div>
-                            <img src="asset/img/affiches/matrix.jpg" class='w-[25vw] lg:w-[15vw]'  alt="matrix">
-                        </div>
-                        <div>
-                            <img src="asset/img/affiches/matrix.jpg" class='w-[15vw] hidden lg:inline-block'  alt="matrix">
-                        </div> 
+                    <div class='flex w-[85vw] justify-between items-start h-[32vw] lg:h-[20vw] mx-auto overflow-hidden'>
+                    <?php
+                    for ($i;$i<10;$i++){
+                            $result=$stmt ->fetch(PDO::FETCH_ASSOC,PDO::FETCH_ORI_ABS,$i);
+                            if (($i==5) or ($i==6)){
+                                echo"<div>
+                                    <img src='asset/img/affiches/$result[affiche]' class='w-[15vw] hidden lg:inline-block'  alt='$result[nom]'>
+                                </div>";
+                            }
+                            else{
+                                echo"<div>
+                                    <img src='asset/img/affiches/$result[affiche]' class='w-[25vw] lg:w-[15vw]'  alt='$result[nom]'>
+                                    </div>";
+                            }
+                        }?>
                     </div>
                 </div>
                 <!-- Item 3 -->
                 <div class="hidden duration-700 ease-in-out" data-carousel-item>
                     <div class='flex w-[85vw] justify-between items-start h-[32vw] lg:h-[20vw] mx-auto overflow-hidden'>
-                        <div>
-                            <img src="asset/img/affiches/matrix.jpg" class='w-[15vw] hidden lg:inline-block'  alt="matrix">
-                        </div>
-                        <div>
-                            <img src="asset/img/affiches/asterix_et_obelix-l-empire-du-milieu.jfif" class='w-[25vw] lg:w-[15vw]'  alt="asterix et obélix">
-                        </div>
-                        <div>
-                            <img src="asset/img/affiches/gladiator.jpg" class='w-[25vw] lg:w-[15vw]'  alt="Gladiator">
-                        </div>
-                        <div>
-                            <img src="asset/img/affiches/matrix.jpg" class='w-[25vw] lg:w-[15vw]'  alt="matrix">
-                        </div>
-                        <div>
-                            <img src="asset/img/affiches/matrix.jpg" class='w-[15vw] hidden lg:inline-block'  alt="matrix">
-                        </div> 
+                    <?php
+                    for ($i;$i<15;$i++){
+                            $result=$stmt ->fetch(PDO::FETCH_ASSOC,PDO::FETCH_ORI_ABS,$i);
+                            if (($i==10) or ($i==14)){
+                                echo"<div>
+                                    <img src='asset/img/affiches/$result[affiche]' class='w-[15vw] hidden lg:inline-block'  alt='$result[nom]'>
+                                </div>";
+                            }
+                            else{
+                                echo"<div>
+                                    <img src='asset/img/affiches/$result[affiche]' class='w-[25vw] lg:w-[15vw]'  alt='$result[nom]'>
+                                    </div>";
+                            }
+                            }?>
                     </div>
                 </div>
                 <!-- Item 4 -->
                 <div class="hidden duration-700 ease-in-out" data-carousel-item>
                 <div class='flex w-[85vw] justify-between items-start h-[32vw] lg:h-[20vw] mx-auto overflow-hidden'>
-                        <div>
-                            <img src="asset/img/affiches/matrix.jpg" class='w-[15vw] hidden lg:inline-block'  alt="matrix">
-                        </div>
-                        <div>
-                            <img src="asset/img/affiches/asterix_et_obelix-l-empire-du-milieu.jfif" class='w-[25vw] lg:w-[15vw]'  alt="asterix et obélix">
-                        </div>
-                        <div>
-                            <img src="asset/img/affiches/gladiator.jpg" class='w-[25vw] lg:w-[15vw]'  alt="Gladiator">
-                        </div>
-                        <div>
-                            <img src="asset/img/affiches/matrix.jpg" class='w-[25vw] lg:w-[15vw]'  alt="matrix">
-                        </div>
-                        <div>
-                            <img src="asset/img/affiches/matrix.jpg" class='w-[15vw] hidden lg:inline-block'  alt="matrix">
-                        </div> 
+                <?php
+                    for ($i;$i<20;$i++){
+                            $result=$stmt ->fetch(PDO::FETCH_ASSOC,PDO::FETCH_ORI_ABS,$i);
+                            if (($i==15) or ($i==19)){
+                                echo"<div>
+                                    <img src='asset/img/affiches/$result[affiche]' class='w-[15vw] hidden lg:inline-block'  alt='$result[nom]'>
+                                </div>";
+                            }
+                            else{
+                                echo"<div>
+                                    <img src='asset/img/affiches/$result[affiche]' class='w-[25vw] lg:w-[15vw]'  alt='$result[nom]'>
+                                    </div>";
+                            }}?>
                     </div>
                 </div>
                 <!-- Item 5 -->
                 <div class="hidden duration-700 ease-in-out" data-carousel-item>
                 <div class='flex w-[85vw] justify-between items-start h-[32vw] lg:h-[20vw] mx-auto overflow-hidden'>
-                        <div>
-                            <img src="asset/img/affiches/matrix.jpg" class='w-[15vw] hidden lg:inline-block'  alt="matrix">
-                        </div>
-                        <div>
-                            <img src="asset/img/affiches/asterix_et_obelix-l-empire-du-milieu.jfif" class='w-[25vw] lg:w-[15vw]'  alt="asterix et obélix">
-                        </div>
-                        <div>
-                            <img src="asset/img/affiches/gladiator.jpg" class='w-[25vw] lg:w-[15vw]'  alt="Gladiator">
-                        </div>
-                        <div>
-                            <img src="asset/img/affiches/matrix.jpg" class='w-[25vw] lg:w-[15vw]'  alt="matrix">
-                        </div>
-                        <div>
-                            <img src="asset/img/affiches/matrix.jpg" class='w-[15vw] hidden lg:inline-block'  alt="matrix">
-                        </div> 
+                <?php
+                    for ($i;$i<25;$i++){
+                            $result=$stmt ->fetch(PDO::FETCH_ASSOC,PDO::FETCH_ORI_ABS,$i);
+                            if (($i==20) or ($i==24)){
+                                echo"<div>
+                                    <img src='asset/img/affiches/$result[affiche]' class='w-[15vw] hidden lg:inline-block'  alt='$result[nom]'>
+                                </div>";
+                            }
+                            else{
+                                echo"<div>
+                                    <img src='asset/img/affiches/$result[affiche]' class='w-[25vw] lg:w-[15vw]'  alt='$result[nom]'>
+                                    </div>";
+                            }
+                                } ?>
                     </div>
                 </div>
             </div>
@@ -157,108 +177,95 @@ session_start();
             <!-- Carousel wrapper -->
             <div class="relative h-[40vw] overflow-hidden rounded-lg ">
                 <!-- Item 1 -->
-                <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                <div class="hidden duration-700 ease-in-out" data-carousel-item> 
                     <div class='flex justify-between lg:h-auto h-[32vw] items-center mt-5'>
                         <div class='flex w-[80vw] mx-auto justify-between lg:justify-evenly items-start lg:h-auto h-[32vw] text-[8px] lg:text-[28px]  overflow-hidden'>
-                            <div class='flex flex-col items-center lg:items-start'>
-                                <div class='h-[25vw] lg:h-[18vw] flex items-start'>
-                                    <img src="asset/img/realisateurs/alfred-hitchcock.jpeg" class='w-[25vw] lg:w-[18vw] z-10 lg:border  lg:mt-[0.5px] lg:border-solid lg:border-white lg:border-r-[#1B1917]'  alt="Alfred Hitchcock">
+                            <?php
+                            $i=0;
+                            for ($i;$i<2;$i++){
+                                $result=$real->fetch(PDO::FETCH_ASSOC,PDO::FETCH_ORI_ABS,$i);
+                                $sql = "SELECT * FROM `film`
+                                        inner join realise on film.id_film = realise.id_film
+                                        WHERE id_realisateur=$result[id_realisateur]";
+                                $film_of_real = $pdo ->prepare($sql);
+                                $film_of_real->execute();
+                                $film1=$film_of_real -> fetch(PDO::FETCH_ASSOC);
+                                $film2=$film_of_real -> fetch(PDO::FETCH_ASSOC);
+                                echo"
+                                <div class='flex flex-col items-center lg:items-start'>
+                                    <div class='h-[25vw] lg:h-[18vw] flex items-start'>
+                                        <a href='content/person.php?person=$result[id_realisateur]'><img src='asset/img/realisateurs/$result[photo_real]' class='w-[25vw] lg:w-[18vw] z-10 lg:border  lg:mt-[0.5px] lg:border-solid lg:border-white lg:border-r-[#1B1917]'  alt='$result[prenom_real]"." "."$result[nom_real]'></a>
                                         <div class='mt-px w-[18vw] h-[18vw] bg-[#1B1917] outline outline-1 outline-white hidden lg:flex flex-col'>
-                                            <div class='flex justify-evenly mt-[20px] overflow-hidden h-[65%]' >
-                                                <img src='asset/img/affiches/the_Birds.jpg' class='inline-block'>
-                                                <img src='asset/img/affiches/rear_Window.png' class=' inline-block'>
-                                            </div>
-                                            <div class="flex gap-10 mx-auto mt-[8%]">
-                                            <div class=' inline-block relative w-[25px] rotate-180 h-[25px] bg-opacity-0 rounded-full border border-solid border-white'>
-                                                <span class='absolute bottom-[11px] right-[5px] pr-[13px] pt-[2px] rounded-lg bg-white inline-block'></span><span class='absolute bottom-[14px] right-[3px] pr-[10px] pt-[2px] rounded-lg rotate-45 bg-white inline-block'></span><span class='absolute bottom-[8px] right-[3px] pr-[10px] pt-[2px] -rotate-45 rounded-lg bg-white inline-block'></span>
-                                            </div>
-                                            <div class=' inline-block relative w-[25px] h-[25px] bg-opacity-0 rounded-full border border-solid border-white'>
-                                                <span class='absolute bottom-[11px] right-[5px] pr-[13px] pt-[2px] rounded-lg bg-white inline-block'></span><span class='absolute bottom-[14px] right-[3px] pr-[10px] pt-[2px] rounded-lg rotate-45 bg-white inline-block'></span><span class='absolute bottom-[8px] right-[3px] pr-[10px] pt-[2px] -rotate-45 rounded-lg bg-white inline-block'></span>
+                                            <div class='flex justify-evenly mt-[20px] overflow-hidden h-[65%]' >";
+                                            if ($film1!=FALSE){
+                                                echo "<a href='content/film.php?film=$film1[id_film]' class='inline-block h-full'><img src='asset/img/affiches/$film1[affiche]' class='inline-block h-full'></a>";
+                                                if ($film2!=FALSE){
+                                                    echo "<a href='content/film.php?film=$film2[id_film]' class='inline-block h-full'><img src='asset/img/affiches/$film2[affiche]' class='inline-block h-full'></a>";
+                                                    }
+                                                }
+                                                else{
+                                                    echo "<div class='flex items-center justify-center'><span class='inline-block h-[36px]'>Pas de film</span></div>";
+                                                }
+                                            echo"
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            <span class='inline-block lg:ml-[20px]'>Alfred Hitchcock</span>
-                        </div>
-                        <div class='flex flex-col items-center lg:items-start '>
-                            <div class='h-[25vw] lg:h-[18vw] flex items-start'>
-                                <img src="asset/img/realisateurs/guillermo_del_toro.webp" class='w-[25vw] lg:w-[18vw] z-10 lg:border  lg:mt-[0.5px] lg:border-solid lg:border-white lg:border-r-[#1B1917]'  alt="Alfred Hitchcock">
-                                <div class='mt-px w-[18vw] h-[18vw] bg-[#1B1917] outline outline-1 outline-white hidden lg:flex flex-col'>
-                                    <div class='flex justify-evenly mt-[20px] overflow-hidden h-[65%]' >
-                                        <img src='asset/img/affiches/pinocchio.webp' class='inline-block'>
-                                        <img src='asset/img/affiches/hellboy.jpg' class=' inline-block'>
-                                    </div>
-                                    <div class="flex gap-10 mx-auto mt-[8%]">
-                                        <div class=' inline-block relative w-[25px] rotate-180 h-[25px] bg-opacity-0 rounded-full border border-solid border-white'>
-                                            <span class='absolute bottom-[11px] right-[5px] pr-[13px] pt-[2px] rounded-lg bg-white inline-block'></span><span class='absolute bottom-[14px] right-[3px] pr-[10px] pt-[2px] rounded-lg rotate-45 bg-white inline-block'></span><span class='absolute bottom-[8px] right-[3px] pr-[10px] pt-[2px] -rotate-45 rounded-lg bg-white inline-block'></span>
-                                        </div>
-                                        <div class=' inline-block relative w-[25px] h-[25px] bg-opacity-0 rounded-full border border-solid border-white'>
-                                            <span class='absolute bottom-[11px] right-[5px] pr-[13px] pt-[2px] rounded-lg bg-white inline-block'></span><span class='absolute bottom-[14px] right-[3px] pr-[10px] pt-[2px] rounded-lg rotate-45 bg-white inline-block'></span><span class='absolute bottom-[8px] right-[3px] pr-[10px] pt-[2px] -rotate-45 rounded-lg bg-white inline-block'></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                                <span class='inline-block lg:ml-[20px]'>Guillermo Del Toro</span>
-                            </div>
-                            <div class='flex flex-col items-center lg:hidden'>
+                                    <span class='inline-block lg:ml-[20px]'>$result[prenom_real]"." "."$result[nom_real]</span>
+                                </div>"; }
+                                $i+=1;
+                                $result=$real->fetch(PDO::FETCH_ASSOC,PDO::FETCH_ORI_ABS,$i);
+                                echo"<div class='flex flex-col items-center lg:hidden'>
                                 <div>
-                                    <img src="asset/img/realisateurs/akira_kurosawa.jpg" class='w-[25vw]'  alt="Akira Kurosawa">
+                                    <img src='asset/img/realisateurs/$result[photo_real]' class='w-[25vw]'  alt='$result[prenom_real]"." "."$result[nom_real]'>
                                 </div>
-                                <span class='inline-block'>Akira Kurosawa</span>
-                            </div>
+                                <span class='inline-block'>$result[prenom_real]"." "."$result[nom_real]</span>
+                            </div>"?>
                         </div>
                     </div>
                 </div>
                 <!-- Item 2 -->
-                <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                <div class="hidden duration-700 ease-in-out" data-carousel-item> 
                     <div class='flex justify-between lg:h-auto h-[32vw] items-center mt-5'>
                         <div class='flex w-[80vw] mx-auto justify-between lg:justify-evenly items-start lg:h-auto h-[32vw] text-[8px] lg:text-[28px]  overflow-hidden'>
-                            <div class='flex flex-col items-center lg:items-start'>
-                                <div class='h-[25vw] lg:h-[18vw] flex items-start'>
-                                    <img src="asset/img/realisateurs/alfred-hitchcock.jpeg" class='w-[25vw] lg:w-[18vw] z-10 lg:border  lg:mt-[0.5px] lg:border-solid lg:border-white lg:border-r-[#1B1917]'  alt="Alfred Hitchcock">
+                            <?php
+                            for ($i;$i<5;$i++){
+                                $result=$real->fetch(PDO::FETCH_ASSOC,PDO::FETCH_ORI_ABS,$i);
+                                $sql = "SELECT * FROM `film`
+                                        inner join realise on film.id_film = realise.id_film
+                                        WHERE id_realisateur=$result[id_realisateur]";
+                                $film_of_real = $pdo ->prepare($sql);
+                                $film_of_real->execute();
+                                $film1=$film_of_real -> fetch(PDO::FETCH_ASSOC);
+                                $film2=$film_of_real -> fetch(PDO::FETCH_ASSOC);
+                                echo"
+                                <div class='flex flex-col items-center lg:items-start'>
+                                    <div class='h-[25vw] lg:h-[18vw] flex items-start'>
+                                        <img src='asset/img/realisateurs/$result[photo_real]' class='w-[25vw] lg:w-[18vw] z-10 lg:border  lg:mt-[0.5px] lg:border-solid lg:border-white lg:border-r-[#1B1917]'  alt='$result[prenom_real]"." "."$result[nom_real]'>
                                         <div class='mt-px w-[18vw] h-[18vw] bg-[#1B1917] outline outline-1 outline-white hidden lg:flex flex-col'>
-                                            <div class='flex justify-evenly mt-[20px] overflow-hidden h-[65%]' >
-                                                <img src='asset/img/affiches/the_Birds.jpg' class='inline-block'>
-                                                <img src='asset/img/affiches/rear_Window.png' class=' inline-block'>
-                                            </div>
-                                            <div class="flex gap-10 mx-auto mt-[8%]">
-                                            <div class=' inline-block relative w-[25px] rotate-180 h-[25px] bg-opacity-0 rounded-full border border-solid border-white'>
-                                                <span class='absolute bottom-[11px] right-[5px] pr-[13px] pt-[2px] rounded-lg bg-white inline-block'></span><span class='absolute bottom-[14px] right-[3px] pr-[10px] pt-[2px] rounded-lg rotate-45 bg-white inline-block'></span><span class='absolute bottom-[8px] right-[3px] pr-[10px] pt-[2px] -rotate-45 rounded-lg bg-white inline-block'></span>
-                                            </div>
-                                            <div class=' inline-block relative w-[25px] h-[25px] bg-opacity-0 rounded-full border border-solid border-white'>
-                                                <span class='absolute bottom-[11px] right-[5px] pr-[13px] pt-[2px] rounded-lg bg-white inline-block'></span><span class='absolute bottom-[14px] right-[3px] pr-[10px] pt-[2px] rounded-lg rotate-45 bg-white inline-block'></span><span class='absolute bottom-[8px] right-[3px] pr-[10px] pt-[2px] -rotate-45 rounded-lg bg-white inline-block'></span>
+                                            <div class='flex justify-evenly mt-[20px] overflow-hidden h-[65%]' >";
+                                            if ($film1!=FALSE){
+                                                echo "<a href='content/film.php?film=$film1[id_film]' class='inline-block h-full'><img src='asset/img/affiches/$film1[affiche]' class='inline-block h-full'></a>";
+                                                if ($film2!=FALSE){
+                                                    echo "<a href='content/film.php?film=$film2[id_film]' class='inline-block h-full'><img src='asset/img/affiches/$film2[affiche]' class='inline-block h-full'></a>";
+                                                    }
+                                                }
+                                                else{
+                                                    echo "<div class='flex items-center justify-center'><span class='inline-block h-[36px]'>Pas de film</span></div>";
+                                                }
+                                            echo"
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            <span class='inline-block lg:ml-[20px]'>Alfred Hitchcock</span>
-                        </div>
-                        <div class='flex flex-col items-center lg:items-start '>
-                            <div class='h-[25vw] lg:h-[18vw] flex items-start'>
-                                <img src="asset/img/realisateurs/guillermo_del_toro.webp" class='w-[25vw] lg:w-[18vw] z-10 lg:border  lg:mt-[0.5px] lg:border-solid lg:border-white lg:border-r-[#1B1917]'  alt="Alfred Hitchcock">
-                                <div class='mt-px w-[18vw] h-[18vw] bg-[#1B1917] outline outline-1 outline-white hidden lg:flex flex-col'>
-                                    <div class='flex justify-evenly mt-[20px] overflow-hidden h-[65%]' >
-                                        <img src='asset/img/affiches/pinocchio.webp' class='inline-block'>
-                                        <img src='asset/img/affiches/hellboy.jpg' class=' inline-block'>
-                                    </div>
-                                    <div class="flex gap-10 mx-auto mt-[8%]">
-                                        <div class=' inline-block relative w-[25px] rotate-180 h-[25px] bg-opacity-0 rounded-full border border-solid border-white'>
-                                            <span class='absolute bottom-[11px] right-[5px] pr-[13px] pt-[2px] rounded-lg bg-white inline-block'></span><span class='absolute bottom-[14px] right-[3px] pr-[10px] pt-[2px] rounded-lg rotate-45 bg-white inline-block'></span><span class='absolute bottom-[8px] right-[3px] pr-[10px] pt-[2px] -rotate-45 rounded-lg bg-white inline-block'></span>
-                                        </div>
-                                        <div class=' inline-block relative w-[25px] h-[25px] bg-opacity-0 rounded-full border border-solid border-white'>
-                                            <span class='absolute bottom-[11px] right-[5px] pr-[13px] pt-[2px] rounded-lg bg-white inline-block'></span><span class='absolute bottom-[14px] right-[3px] pr-[10px] pt-[2px] rounded-lg rotate-45 bg-white inline-block'></span><span class='absolute bottom-[8px] right-[3px] pr-[10px] pt-[2px] -rotate-45 rounded-lg bg-white inline-block'></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                                <span class='inline-block lg:ml-[20px]'>Guillermo Del Toro</span>
-                            </div>
-                            <div class='flex flex-col items-center lg:hidden'>
+                                    <span class='inline-block lg:ml-[20px]'>$result[prenom_real]"." "."$result[nom_real]</span>
+                                </div>"; }
+                                $i+=1;
+                                $result=$real->fetch(PDO::FETCH_ASSOC,PDO::FETCH_ORI_ABS,$i);
+                                echo"<div class='flex flex-col items-center lg:hidden'>
                                 <div>
-                                    <img src="asset/img/realisateurs/akira_kurosawa.jpg" class='w-[25vw]'  alt="Akira Kurosawa">
+                                    <img src='asset/img/realisateurs/$result[photo_real]' class='w-[25vw]'  alt='$result[prenom_real]"." "."$result[nom_real]'>
                                 </div>
-                                <span class='inline-block'>Akira Kurosawa</span>
-                            </div>
+                                <span class='inline-block'>$result[prenom_real]"." "."$result[nom_real]</span>
+                            </div>"?>
                         </div>
                     </div>
                 </div>
@@ -292,7 +299,7 @@ session_start();
                                 <div class='mt-px w-[18vw] h-[18vw] bg-[#1B1917] outline outline-1 outline-white hidden lg:flex flex-col'>
                                     <div class='flex justify-evenly mt-[20px] overflow-hidden h-[65%]' >
                                         <img src='asset/img/affiches/pinocchio.webp' class='inline-block'>
-                                        <img src='asset/img/affiches/hellboy.jpg' class=' inline-block'>
+                                        <img src='asset/img/affiches/hellboy.webp' class=' inline-block'>
                                     </div>
                                     <div class="flex gap-10 mx-auto mt-[8%]">
                                         <div class=' inline-block relative w-[25px] rotate-180 h-[25px] bg-opacity-0 rounded-full border border-solid border-white'>
@@ -345,7 +352,7 @@ session_start();
                                 <div class='mt-px w-[18vw] h-[18vw] bg-[#1B1917] outline outline-1 outline-white hidden lg:flex flex-col'>
                                     <div class='flex justify-evenly mt-[20px] overflow-hidden h-[65%]' >
                                         <img src='asset/img/affiches/pinocchio.webp' class='inline-block'>
-                                        <img src='asset/img/affiches/hellboy.jpg' class=' inline-block'>
+                                        <img src='asset/img/affiches/hellboy.webp' class=' inline-block'>
                                     </div>
                                     <div class="flex gap-10 mx-auto mt-[8%]">
                                         <div class=' inline-block relative w-[25px] rotate-180 h-[25px] bg-opacity-0 rounded-full border border-solid border-white'>
