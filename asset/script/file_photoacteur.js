@@ -39,7 +39,8 @@ function updateImageDisplay() {
   var fileTypes = [
     'image/jpeg',
     'image/pjpeg',
-    'image/png'
+    'image/png',
+    'image/webp'
   ]
   
   function validFileType(file) {

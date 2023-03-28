@@ -1,5 +1,58 @@
 <?php
 session_start();
+$host = '127.0.0.1';
+$db   = 'enwatch';
+$user = 'root';
+$pass = '';
+$port = "3306";
+$charset = 'utf8mb4';
+
+$options = [
+    \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+    \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
+    \PDO::ATTR_EMULATE_PREPARES   => false,
+];
+$dsn = "mysql:host=$host;dbname=$db;charset=$charset;port=$port";
+try {
+    $pdo = new \PDO($dsn, $user, $pass, $options);
+    } catch (\PDOException $e) {
+            throw new \PDOException($e->getMessage(), (int)$e->getCode());
+}
+$sql = "SELECT DISTINCT nom,date_sorti,synopsis,affiche,nom_cat,
+GROUP_CONCAT(DISTINCT nom_cat),
+GROUP_CONCAT(DISTINCT prenom_acteur,' ',nom_acteur,';',photo_acteur),
+GROUP_CONCAT(DISTINCT prenom_real,' ',nom_real,';',photo_real),
+GROUP_CONCAT(DISTINCT lien_photo),
+COUNT(DISTINCT lien_photo)
+FROM `film`
+LEFT JOIN possede ON film.id_film = possede.id_film
+LEFT JOIN categorie ON possede.id_categorie = categorie.id_categorie
+LEFT JOIN a_un_role ON film.id_film = a_un_role.id_film
+LEFT JOIN acteurs ON a_un_role.id_acteur = acteurs.id_acteur
+LEFT JOIN realise ON film.id_film = realise.id_film
+LEFT JOIN realisateur ON realise.id_realisateur = realisateur.id_realisateur
+LEFT JOIN photo_film ON film.id_film = photo_film.id_film
+WHERE film.id_film=?
+GROUP BY film.id_film";
+$stmt=$pdo -> prepare($sql);
+$stmt->bindParam(1,$_GET['id_film']);
+$stmt -> execute();
+$film=$stmt->fetch(PDO::FETCH_NUM);
+$film[5]=explode(",",$film[5]);
+$film[6]=explode(",",$film[6]);
+$i=0;
+foreach ($film[6] as $acteur){
+$film[6][$i]=explode(";",$acteur);
+$i+=1;
+}
+$film[7]=explode(",",$film[7]);
+$i=0;
+foreach ($film[7] as $real){
+$film[7][$i]=explode(";",$real);
+$i+=1;
+}
+$film[8]=explode(",",$film[8]);
+$i=$film[9]+1;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,7 +69,7 @@ session_start();
     </style>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.css" rel="stylesheet" />
 </head>
-    
+
 <body>
     <?php
         include("navbar.php");
@@ -24,68 +77,73 @@ session_start();
     <div class='bg-[#33312E] text-[#1CD4E1] flex flex-col px-[10%] pt-5'>
         <div class='flex flex-col md:flex-row items-center md:items-start'>   
             <div class='flex font-[Kodchasan] gap-2'>
-                <div>
-                    <div id="default-carousel" class="relative w-[40vw] h-[66vw] md:w-[25vw] md:h-[40vw] mb-10" data-carousel="static">
-                        <!-- Carousel wrapper -->
-                        <div class="relative md:h-[36vw] h-[60vw] overflow-hidden">
-                            <!-- Item 1 -->
-                            <div class="hidden duration-700 ease-in-out  bg-[url(../asset/img/affiches/hellboy.webp)] " data-carousel-item>
-                                <div class='backdrop-blur-lg w-full h-full flex items-center'>
-                                    <img src="../asset/img/affiches/hellboy.webp" class='w-full mx-auto inline-block'>
-                                </div>
+                <?php
+                if ($film[8][0]!=""){
+                    //Item 1
+                    echo"
+                    <div>
+                        <div id='default-carousel' class='relative w-[40vw] h-[66vw] md:w-[25vw] md:h-[40vw] mb-10' data-carousel='static'>
+                            <div class='relative md:h-[36vw] h-[60vw] overflow-hidden'>
+                                
+                                <div class='hidden duration-700 ease-in-out  bg-[url(../asset/img/affiches/$film[3])] ' data-carousel-item>
+                                    <div class='backdrop-blur-lg w-full h-full flex items-center'>
+                                        <img src='../asset/img/affiches/$film[3]' class='w-full mx-auto inline-block'>
+                                    </div>
+                                </div>";
+                                /// item 2-n
+                                foreach ($film[8] as $photo_film){
+                                echo"
+                                <div class='hidden duration-700 ease-in-out flex items-center bg-[url(../asset/img/img_film/$photo_film)] bg-cover' data-carousel-item>
+                                    <div class='backdrop-blur-lg w-full h-full flex items-center'>
+                                        <img src='../asset/img/img_film/$photo_film' class='w-full my-auto inline-block' >
+                                    </div>
+                                </div>";
+                                }
+                                
+                            echo"</div>
+                            <!-- Slider indicators -->
+                            <div class='absolute z-0 z-30 grid grid-cols-$i w-full -translate-x-1/2 h-[10%] bottom-[0%] left-1/2 overflow-hidden'>
+                                <button type='button' class='h-full w-full object-cover' aria-current='true' aria-label='Slide 1' data-carousel-slide-to='0'> <img src='../asset/img/affiches/$film[3]' class='w-full h-full' alt=''></button>";
+                                $i=1;
+                                foreach ($film[8] as $photo_film){
+                                    if ($photo_film!=""){
+                                    echo"
+                                    <button type='button' class='h-full w-full object-cover' aria-current='true' aria-label='Slide $i' data-carousel-slide-to='$i'> <img src='../asset/img/img_film/$photo_film' class='w-full h-full' alt=''></button>";
+                                    $i+=1;
+                                    }
+                                }
+                            echo"
                             </div>
-                            <!-- Item 2 -->
-                            <div class="hidden duration-700 ease-in-out flex items-center bg-[url(../asset/img/img_film/hellboy_1.jpg)] bg-cover" data-carousel-item>
-                                <div class='backdrop-blur-lg w-full h-full flex items-center'>
-                                    <img src="../asset/img/img_film/hellboy_1.jpg" class='w-full my-auto inline-block' >
-                                </div>
-                            </div>
-                            <!-- Item 3 -->
-                            <div class="hidden duration-700 ease-in-out flex items-center bg-[url(../asset/img/img_film/hellboy_2.jpg)] bg-cover" data-carousel-item>
-                                <div class='backdrop-blur-lg w-full h-full flex items-center '>
-                                    <img src="../asset/img/img_film/hellboy_2.jpg" class='w-full my-auto inline-block'>
-                                </div>
-                            </div>
-                            <!-- Item 4 -->
-                            <div class="hidden duration-700 ease-in-out flex items-center bg-[url(../asset/img/img_film/hellboy_3.webp)] bg-cover" data-carousel-item>
-                                <div class='backdrop-blur-lg w-full h-full flex items-center'>
-                                    <img src="../asset/img/img_film/hellboy_3.webp" class='w-full my-auto inline-block'>
-                                </div>
-                            </div>
-                            <!-- Item 5 -->
-                            <div class="hidden duration-700 ease-in-out flex items-center bg-[url(../asset/img/img_film/hellboy_4.webp)] bg-cover" data-carousel-item>
-                                <div class='backdrop-blur-lg w-full h-full flex items-center'>
-                                    <img src="../asset/img/img_film/hellboy_4.webp" class='w-full my-auto inline-block'>
-                                </div>
+                            <!-- Slider controls -->
+                            <button type='button' class='absolute z-0 top-0 left-0 z-30 flex items-center justify-center h-[85%] px-4 cursor-pointer group focus:outline-none' data-carousel-prev>
+                                <span class='inline-flex items-center justify-center w-4 h-4 lg:w-8 lg:h-8 rounded-full bg-black/30 dark:bg-dray-800/30 hover:bg-black/50 dark:hover:bg-gray-800/60 focus:ring-4 focus:ring-white dark:focus:ring-gray-800/70 focus:outline-none'>
+                                    <svg aria-hidden='true' class='w-5 h-5 text-white sm:w-6 sm:h-6 dark:text-gray-800' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M15 19l-7-7 7-7'></path></svg>
+                                    <span class='sr-only'>Previous</span>
+                                </span>
+                            </button>
+                            <button type='button' class='absolute z-0 top-0 right-0 z-30 flex items-center justify-center h-[85%] px-4 cursor-pointer group focus:outline-none' data-carousel-next>
+                                <span class='inline-flex items-center justify-center w-4 h-4 lg:w-8 lg:h-8 rounded-full bg-black/30 dark:bg-gray-800/30 hover:bg-black/50 dark:hover:bg-gray-800/60 focus:ring-4 focus:ring-white dark:focus:ring-gray-800/70 focus:outline-none'>
+                                    <svg aria-hidden='true' class='w-5 h-5 text-white sm:w-6 sm:h-6 dark:text-gray-800' fill='none' stroke='currentColor' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 5l7 7-7 7'></path></svg>
+                                    <span class='sr-only'>Next</span>
+                                </span>
+                            </button>
+                        </div>
+                    </div>";}
+                    else{
+                    echo "
+                    <div class='relative w-[40vw] md:w-[25vw] md:h-[36vw] h-[60vw] overflow-hidden'>    
+                        <div class='w-full h-full bg-[url(../asset/img/affiches/$film[3])]'>
+                            <div class='backdrop-blur-lg w-full h-full flex items-center'>
+                                <img src='../asset/img/affiches/$film[3]' class='w-full mx-auto inline-block'>
                             </div>
                         </div>
-                        <!-- Slider indicators -->
-                        <div class="absolute z-0 z-30 grid grid-cols-5 w-full -translate-x-1/2 h-[10%] bottom-[0%] left-1/2 overflow-hidden">
-                            <button type="button" class="h-full w-full object-cover" aria-current="true" aria-label="Slide 1" data-carousel-slide-to="0"> <img src="../asset/img/affiches/hellboy.webp" class='w-full h-full' alt=""></button>
-                            <button type="button" class="h-full w-full object-cover" aria-current="false" aria-label="Slide 2" data-carousel-slide-to="1"><img src="../asset/img/img_film/hellboy_1.jpg" class='w-full h-full ' alt=""></button>
-                            <button type="button" class="h-full w-full object-cover" aria-current="false" aria-label="Slide 3" data-carousel-slide-to="2"><img src="../asset/img/img_film/hellboy_2.jpg" class='w-full h-full ' alt=""></button>
-                            <button type="button" class="h-full w-full object-cover" aria-current="false" aria-label="Slide 4" data-carousel-slide-to="3"><img src="../asset/img/img_film/hellboy_3.webp" class='w-full h-full ' alt=""></button>
-                            <button type="button" class="h-full w-full object-cover" aria-current="false" aria-label="Slide 5" data-carousel-slide-to="4"><img src="../asset/img/img_film/hellboy_4.webp" class='w-full h-full ' alt=""></button>
-                        </div>
-                        <!-- Slider controls -->
-                        <button type="button" class="absolute z-0 top-0 left-0 z-30 flex items-center justify-center h-[85%] px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
-                            <span class="inline-flex items-center justify-center w-4 h-4 lg:w-8 lg:h-8 rounded-full bg-black/30 dark:bg-dray-800/30 hover:bg-black/50 dark:hover:bg-gray-800/60 focus:ring-4 focus:ring-white dark:focus:ring-gray-800/70 focus:outline-none">
-                                <svg aria-hidden="true" class="w-5 h-5 text-white sm:w-6 sm:h-6 dark:text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                                <span class="sr-only">Previous</span>
-                            </span>
-                        </button>
-                        <button type="button" class="absolute z-0 top-0 right-0 z-30 flex items-center justify-center h-[85%] px-4 cursor-pointer group focus:outline-none" data-carousel-next>
-                            <span class="inline-flex items-center justify-center w-4 h-4 lg:w-8 lg:h-8 rounded-full bg-black/30 dark:bg-gray-800/30 hover:bg-black/50 dark:hover:bg-gray-800/60 focus:ring-4 focus:ring-white dark:focus:ring-gray-800/70 focus:outline-none">
-                                <svg aria-hidden="true" class="w-5 h-5 text-white sm:w-6 sm:h-6 dark:text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                                <span class="sr-only">Next</span>
-                            </span>
-                        </button>
-                    </div>
-                </div>
+                    </div>";
+                    }
+                    ?>
                 <div class='relative flex flex-col text-[14px] md:text-[1.2em] h-[66vw] md:w-[25vw] md:h-[40vw]'>
-                    <span class='text-[34px] w-[40vw] md:w-[25vw] lg:text-[50px] inline-block '>Hellboy</span>
-                    <span class='inline-block'>Sortie:2004</span>
-                    <span class='inline-block h-[30vw] md:h-[20vw] text-[8px] lg:text-[12px] top-[72px] md:top-[100px] bg-[#33312E] z-10 overflow-hidden' id='description'>Né dans les flammes de l'enfer, le démon Hellboy est transporté sur Terre lors d'une sombre cérémonie célébrée par les nazis, désireux d'utiliser les forces infernales à des fins de conquête. Sauvé par le docteur Broom, Hellboy est alors élevé pour combattre les forces du Mal. Armé, possédant un bras droit en pierre, il fait équipe avec le télépathe Abe Sapien et Liz Sherman, capable de contrôler le feu...<br><button id='cacher' class='ml-[35%] text-[12px] bg-[#33312E] border-white border border-solid px-1 md:hidden'>Cacher</button></span>
+                    <span class='text-[34px] w-[40vw] md:w-[25vw] lg:text-[50px] inline-block leading-10 mb-4'><?php echo "$film[0]"?></span>
+                    <span class='inline-block'>Date de sortie:<?php echo "$film[1]"?></span>
+                    <span class='inline-block h-[30vw] md:h-[20vw] text-[8px] lg:text-[12px] top-[72px] md:top-[100px] bg-[#33312E] z-10 overflow-hidden' id='description'><?php echo"$film[2]"; ?><br><button id='cacher' class='ml-[35%] text-[12px] bg-[#33312E] border-white border border-solid px-1 md:hidden'>Cacher</button></span>
                     <button  id='voirPlus' class='md:hidden'>Voir plus</button>
                     <div class='bg-[#191919] flex items-center absolute z-0 right-0 bottom-0 rounded-[10px]'>
                         <span class='text-[10px] md:text-[16px] inline-block px-2'>
@@ -98,33 +156,65 @@ session_start();
                 </div>
             </div>
             <div class='flex md:flex-col justify-between md:justify-start gap-2 text-[12px] md:text-[10px] md:h-[40vw] flex-wrap md:items-end md:border-solid md:border-r-black md:border-y-black md:border-2 border-l-transparent'>
-                <a href='catalogue?cat=Action' class='inline-block px-4 md:pr-1 md:pl-3 py-1 md:py-px rounded-2xl bg-[#D9D9D9] text-black'>Action</a>
-                <span class='inline-block px-4 md:pr-1 md:pl-3 py-1 md:py-px rounded-2xl bg-[#D9D9D9] text-black'>Fantastique</span>
-                <span class='inline-block px-4 md:pr-1 md:pl-3 py-1 md:py-px rounded-2xl bg-[#D9D9D9] text-black'>Sombre</span>
+                <?php
+                
+                foreach ($film[5] as $cat){
+                    echo "<a href='catalogue?cat=$cat' class='inline-block px-4 md:pr-1 md:pl-3 py-1 md:py-px rounded-2xl bg-[#D9D9D9] text-black'>$cat</a>";
+                }
+                ?>
             </div>
             <div class='flex md:flex-col gap-4 md:items-center'>
-            <div class='grid grid-cols-1 w-[100px] xl:w-[200px] text-center'>
+                <div class='grid grid-cols-1 w-[100px] xl:w-[300px] text-center'>
                     Réalisateurs
-                    <div class='text-[10px] max-h-[110px] overflow-scroll flex flex-col items-center'>
-                        <a href='person.php?person=guillermo_del_toro'>
-                            <img src="../asset/img/realisateurs/guillermo_del_toro.webp" alt="Guillermo Del Toro">
-                            <span class='text-center'>Guillermo Del Toro</span>
-                        </a>
+                    
+                    <div class='text-[10px] lg:text-[20px] max-h-[300px] overflow-auto flex flex-col items-center'>
+                        <?php
+                        if ($film[7][0][0]!=""){
+                            foreach($film[7] as $real){
+                            echo"
+                            <a href='person.php?person=$real[0]'>
+                                <img src='../asset/img/realisateurs/$real[1]' alt='$real[0]'>
+                                <span class='text-center'>$real[0]</span>
+                            </a>";
+                        }
+                    }
+                    else echo "Pas de réalisateurs connu"
+                        ?>
                     </div>
                 </div>
                 <div class='flex flex-col items-center'>
                     Acteurs
-                    <div class='grid w-[160px] lg:w-[230px] xl:w-[330px] max-h-[110px] overflow-scroll'>
-                        <div class='grid grid-cols-2 grid-rows-[40px] lg:grid-rows-[70px] gap-x-[10px] text-[10px] text-center'>
-                            <a href='person.php?person=david_harbour' class='overflow-hidden'>
-                                <img src='../asset/img/acteurs/david_harbour.jpg'>
-                            </a>
-                            <a href='person.php?person=milla_jovovich' class='overflow-hidden'>
-                                <img src='../asset/img/acteurs/milla_jovovich.webp'>
-                            </a>
-                            <a href='person.php?person=david_harbour'>David harbour</a>
-                            <a href='person.php?person=milla_jovovich'>Milla Jovovich</a>
-                        </div>
+                    <div class='grid w-[160px] lg:w-[400px] xl:w-[500px] max-h-[150px] overflow-auto'>
+                        <?php
+                        $i=1;
+                        foreach ($film[6] as $acteur){
+                            $a=$i+2;
+                            if ($i==1){
+                                echo "<div class='grid grid-cols-2 grid-rows-[40px] lg:grid-rows-[140px] gap-x-[10px] text-[10px] lg:text-[16px] text-center'>";
+                            }
+                            echo"
+                            <div class='flex-col flex'>
+                                <a href='person.php?person=$acteur[0]' class='overflow-hidden order-$i'>
+                                    <img src='../asset/img/acteurs/$acteur[1]'>
+                                </a>
+                                <a href='person.php?person=$acteur[0]' class='order-$a'>$acteur[0]</a>
+                            </div>";
+                            if ($i==2){
+                                echo"</div>";
+                            }
+                            if ($i==1){
+                                $i=2;
+                            }
+                            else{
+                                $i=1;
+                            }
+                        
+                        }
+                        if ($i==2){
+                            echo "</div>";
+                        }
+
+                        ?>
                     </div>
                 </div>
                 
@@ -132,131 +222,8 @@ session_start();
         </div>
         <div class='flex-col'>
             <span class='ml-[9px]'>Films liés</span>
-            <div id="default-carousel" class="relative w-full h-[37vw] lg:h-[24vw] mb-10 z-0" data-carousel="static">
-                <!-- Carousel wrapper -->
-                <div class="relative z-0 h-[36vw] overflow-hidden rounded-lg ">
-                    <!-- Item 1 -->
-                    <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                        <div class='flex justify-between items-start h-[32vw] lg:h-[20vw] mx-auto overflow-hidden'>
-                            <div>
-                                <img src="../asset/img/affiches/matrix.jpg" class='w-[15vw] hidden lg:inline-block'  alt="matrix">
-                            </div>
-                            <div>
-                                <img src="../asset/img/affiches/asterix_et_obelix-l-empire-du-milieu.jfif" class='w-[25vw] lg:w-[15vw]'  alt="asterix et obélix">
-                            </div>
-                            <div>
-                                <img src="../asset/img/affiches/gladiator.jpg" class='w-[25vw] lg:w-[15vw]'  alt="Gladiator">
-                            </div>
-                            <div>
-                                <img src="../asset/img/affiches/matrix.jpg" class='w-[25vw] lg:w-[15vw]'  alt="matrix">
-                            </div>
-                            <div>
-                                <img src="../asset/img/affiches/matrix.jpg" class='w-[15vw] hidden lg:inline-block'  alt="matrix">
-                            </div> 
-                        </div>
-                    </div>
-                    <!-- Item 2 -->
-                    <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                    <div class='flex justify-between items-start h-[32vw] lg:h-[20vw] mx-auto overflow-hidden'>
-                            <div>
-                                <img src="../asset/img/affiches/matrix.jpg" class='w-[15vw] hidden lg:inline-block'  alt="matrix">
-                            </div>
-                            <div>
-                                <img src="../asset/img/affiches/asterix_et_obelix-l-empire-du-milieu.jfif" class='w-[25vw] lg:w-[15vw]'  alt="asterix et obélix">
-                            </div>
-                            <div>
-                                <img src="../asset/img/affiches/gladiator.jpg" class='w-[25vw] lg:w-[15vw]'  alt="Gladiator">
-                            </div>
-                            <div>
-                                <img src="../asset/img/affiches/matrix.jpg" class='w-[25vw] lg:w-[15vw]'  alt="matrix">
-                            </div>
-                            <div>
-                                <img src="../asset/img/affiches/matrix.jpg" class='w-[15vw] hidden lg:inline-block'  alt="matrix">
-                            </div> 
-                        </div>
-                    </div>
-                    <!-- Item 3 -->
-                    <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                        <div class='flex justify-between items-start h-[32vw] lg:h-[20vw] mx-auto overflow-hidden'>
-                            <div>
-                                <img src="../asset/img/affiches/matrix.jpg" class='w-[15vw] hidden lg:inline-block'  alt="matrix">
-                            </div>
-                            <div>
-                                <img src="../asset/img/affiches/asterix_et_obelix-l-empire-du-milieu.jfif" class='w-[25vw] lg:w-[15vw]'  alt="asterix et obélix">
-                            </div>
-                            <div>
-                                <img src="../asset/img/affiches/gladiator.jpg" class='w-[25vw] lg:w-[15vw]'  alt="Gladiator">
-                            </div>
-                            <div>
-                                <img src="../asset/img/affiches/matrix.jpg" class='w-[25vw] lg:w-[15vw]'  alt="matrix">
-                            </div>
-                            <div>
-                                <img src="../asset/img/affiches/matrix.jpg" class='w-[15vw] hidden lg:inline-block'  alt="matrix">
-                            </div> 
-                        </div>
-                    </div>
-                    <!-- Item 4 -->
-                    <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                    <div class='flex justify-between items-start h-[32vw] lg:h-[20vw] mx-auto overflow-hidden'>
-                            <div>
-                                <img src="../asset/img/affiches/matrix.jpg" class='w-[15vw] hidden lg:inline-block'  alt="matrix">
-                            </div>
-                            <div>
-                                <img src="../asset/img/affiches/asterix_et_obelix-l-empire-du-milieu.jfif" class='w-[25vw] lg:w-[15vw]'  alt="asterix et obélix">
-                            </div>
-                            <div>
-                                <img src="../asset/img/affiches/gladiator.jpg" class='w-[25vw] lg:w-[15vw]'  alt="Gladiator">
-                            </div>
-                            <div>
-                                <img src="../asset/img/affiches/matrix.jpg" class='w-[25vw] lg:w-[15vw]'  alt="matrix">
-                            </div>
-                            <div>
-                                <img src="../asset/img/affiches/matrix.jpg" class='w-[15vw] hidden lg:inline-block'  alt="matrix">
-                            </div> 
-                        </div>
-                    </div>
-                    <!-- Item 5 -->
-                    <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                    <div class='flex justify-between items-start h-[32vw] lg:h-[20vw] mx-auto overflow-hidden'>
-                            <div>
-                                <img src="../asset/img/affiches/matrix.jpg" class='w-[15vw] hidden lg:inline-block'  alt="matrix">
-                            </div>
-                            <div>
-                                <img src="../asset/img/affiches/asterix_et_obelix-l-empire-du-milieu.jfif" class='w-[25vw] lg:w-[15vw]'  alt="asterix et obélix">
-                            </div>
-                            <div>
-                                <img src="../asset/img/affiches/gladiator.jpg" class='w-[25vw] lg:w-[15vw]'  alt="Gladiator">
-                            </div>
-                            <div>
-                                <img src="../asset/img/affiches/matrix.jpg" class='w-[25vw] lg:w-[15vw]'  alt="matrix">
-                            </div>
-                            <div>
-                                <img src="../asset/img/affiches/matrix.jpg" class='w-[15vw] hidden lg:inline-block'  alt="matrix">
-                            </div> 
-                        </div>
-                    </div>
-                </div>
-                <!-- Slider indicators -->
-                <div class="absolute z-0 z-30 flex space-x-3 -translate-x-1/2 bottom-0 left-1/2">
-                    <button type="button" class="w-3 h-3 rounded-full" aria-current="true" aria-label="Slide 1" data-carousel-slide-to="0"></button>
-                    <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 2" data-carousel-slide-to="1"></button>
-                    <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 3" data-carousel-slide-to="2"></button>
-                    <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 4" data-carousel-slide-to="3"></button>
-                    <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 5" data-carousel-slide-to="4"></button>
-                </div>
-                <!-- Slider controls -->
-                <button type="button" class="absolute z-0 top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
-                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full md:w-10 md:h-10 bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                        <svg aria-hidden="true" class="w-5 h-5 text-white sm:w-6 sm:h-6 dark:text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                        <span class="sr-only">Previous</span>
-                    </span>
-                </button>
-                <button type="button" class="absolute z-0 top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
-                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full md:w-10 md:h-10 bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                        <svg aria-hidden="true" class="w-5 h-5 text-white sm:w-6 sm:h-6 dark:text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                        <span class="sr-only">Next</span>
-                    </span>
-                </button>
+            <div class=''>
+
             </div>
             <div class='max-h-[100px] md:max-h-[200px] lg:h-auto lg:max-h-[400px] overflow-y-scroll'>
                 <div class='grid grid-cols-[50px_1fr] md:grid-cols-[70px_1fr] relative'>

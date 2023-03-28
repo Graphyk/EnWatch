@@ -76,7 +76,7 @@ try {
                     <div class='relative'>
                         <div class="preview w-[100px] md:w-[200px]  blur-sm" >
                         </div>
-                        <input type="file" id="image_uploads" name="image_uploads" class='absolute h-full cursor-pointer rounded-full bottom-0 left-0 opacity-0 z-[99]' accept=".jpg, .jpeg, .png" multiple>
+                        <input type="file" id="image_uploads" name="image_uploads" class='absolute h-full cursor-pointer rounded-full bottom-0 left-0 opacity-0 z-[99]' accept=".jpg, .jpeg, .png .webp" multiple>
                         <img src="../../asset/img/logos/kisspng-white-house-johns-hopkins-university-website-servi-white-cross-5ab020e49e7627.0961720415214921966491.png" id='cross' alt="" class='z-0 cursor-pointer absolute left-[30px] md:top-[60px] top-[30px] md:left-[60px] w-[40px] md:w-[80px] h-[40px] md:h-[80px]'>
                     </div>
                     
