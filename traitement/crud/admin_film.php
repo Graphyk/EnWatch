@@ -88,7 +88,7 @@ try {
                 echo "$reals[prenom_real] $reals[nom_real]<br>";
                 }
                 echo "
-                </td>";
+                <br><a href='form/link_real.php?id_film=$row[0]' class='bg-green-200'>ajouter réalisateur</a></td>";
                 echo"
                 <td class='px-10 py-5 border border-black border-solid text-center'>";
             while ($cats = $cat->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)){
@@ -100,14 +100,12 @@ try {
             while ($acteurs = $acteur->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)){
                 echo "$acteurs[prenom_acteur] $acteurs[nom_acteur]<br>";
                 }
-                echo "<br><div class='bg-green-200'>ajouter acteur</div></td>
+                echo "<br><a href='form/link_acteur.php?id_film=$row[0]' class='bg-green-200'>ajouter acteur</a></td>
             <td class='px-10 py-5 border border-black border-solid text-center'>";
             while ($photos = $photo->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)){
-                echo "$photo[lien_photo]<br>";
+                echo "$photos[lien_photo]<br>";
                 }
-                echo "<br><div class='bg-green-200'>ajouter photo</div> </td>";
-
-
+                echo "<br><a href='form/link_photo.php?id_film=$row[0]' class='bg-green-200'>ajouter photo</a> </td>";
         }
         ?>
         <tr>
