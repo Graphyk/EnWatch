@@ -20,10 +20,11 @@ try {
 }
 $sql = "SELECT DISTINCT nom,date_sorti,synopsis,affiche,nom_cat,
 GROUP_CONCAT(DISTINCT nom_cat),
-GROUP_CONCAT(DISTINCT prenom_acteur,' ',nom_acteur,';',photo_acteur),
-GROUP_CONCAT(DISTINCT prenom_real,' ',nom_real,';',photo_real),
+GROUP_CONCAT(DISTINCT prenom_acteur,' ',nom_acteur,';',photo_acteur,';',acteurs.id_acteur),
+GROUP_CONCAT(DISTINCT prenom_real,' ',nom_real,';',photo_real,';',realisateur.id_realisateur),
 GROUP_CONCAT(DISTINCT lien_photo),
-COUNT(DISTINCT lien_photo)
+COUNT(DISTINCT lien_photo),
+GROUP_CONCAT(DISTINCT categorie.id_categorie)
 FROM `film`
 LEFT JOIN possede ON film.id_film = possede.id_film
 LEFT JOIN categorie ON possede.id_categorie = categorie.id_categorie
@@ -40,6 +41,7 @@ $stmt -> execute();
 $film=$stmt->fetch(PDO::FETCH_NUM);
 $film[5]=explode(",",$film[5]);
 $film[6]=explode(",",$film[6]);
+$film[10]=explode(",",$film[10]);
 $i=0;
 foreach ($film[6] as $acteur){
 $film[6][$i]=explode(";",$acteur);
@@ -53,6 +55,73 @@ $i+=1;
 }
 $film[8]=explode(",",$film[8]);
 $i=$film[9]+1;
+if (($film[7][0][0]!="") OR ($film[6][0][0]!="") OR ($film[10][0]!="")){
+    $where="WHERE ";
+}
+$n=0;
+$a=0;
+if ($film[7][0][0]!=""){
+    $len=count($film[7]);
+    for ($n;$n<$len;$n++){
+        if ($n!=0){
+            $where.="OR ";
+        }
+        $where.="id_realisateur='".$film[7][$n][2]."' ";
+        $a=1;
+    }
+}
+$n=0;
+$len=count($film[6]);
+if ($film[6][0][0]!=""){
+    for ($n;$n<$len;$n++){
+        if ($n!=0 or $a=1){
+            $where.="OR ";
+        }
+        $where.="id_acteur='".$film[6][$n][2]."' ";
+        $a=2;
+    }
+}
+$n=0;
+$len=count($film[10]);
+if ($film[10][0]!=""){
+    for ($n;$n<$len;$n++){
+        if ($n!=0 or $a!=0){
+            $where.="OR ";
+        }
+        $where.="id_categorie='".$film[10][$n][0]."' ";
+    }
+}
+if (($film[7][0][0]!="") OR ($film[6][0][0]!="") OR ($film[10][0]!="")){
+$sql="SELECT film.id_film, film.affiche,COUNT(DISTINCT id_realisateur) AS somme_real,COUNT(DISTINCT id_acteur) AS somme_acteur,COUNT(DISTINCT id_categorie) AS somme_categorie  FROM `film` 
+LEFT JOIN realise ON film.id_film = realise.id_film
+LEFT JOIN a_un_role ON film.id_film = a_un_role.id_film
+LEFT JOIN possede ON film.id_film = possede.id_film
+$where
+GROUP BY film.id_film
+";
+$film_lies=$pdo -> prepare ($sql);
+$film_lies->execute();
+$film_lies=$film_lies->fetchAll();
+$n=0;
+foreach($film_lies as $films){
+    $films['somme']=$films['somme_real']+$films['somme_acteur']+$films['somme_categorie'];
+    $film_lies[$n]['somme']=$films['somme'];
+    $n++;
+}
+$n=0;
+
+$len=count($film_lies)-1;
+for ($n;$n<$len;$n++){
+    $c=0;
+    for($c;$c<$len;$c++){
+        if ($film_lies[$c]['somme']<$film_lies[$c+1]['somme']){
+            $echange=$film_lies[$c];
+            $film_lies[$c]=$film_lies[$c+1];
+            $film_lies[$c+1]=$echange;
+        }
+    }
+}
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -159,7 +228,9 @@ $i=$film[9]+1;
                 <?php
                 
                 foreach ($film[5] as $cat){
+                    if ($cat!=""){
                     echo "<a href='catalogue?cat=$cat' class='inline-block px-4 md:pr-1 md:pl-3 py-1 md:py-px rounded-2xl bg-[#D9D9D9] text-black'>$cat</a>";
+                    }
                 }
                 ?>
             </div>
@@ -187,31 +258,36 @@ $i=$film[9]+1;
                     <div class='grid w-[160px] lg:w-[400px] xl:w-[500px] max-h-[150px] overflow-auto'>
                         <?php
                         $i=1;
-                        foreach ($film[6] as $acteur){
-                            $a=$i+2;
-                            if ($i==1){
-                                echo "<div class='grid grid-cols-2 grid-rows-[40px] lg:grid-rows-[140px] gap-x-[10px] text-[10px] lg:text-[16px] text-center'>";
+                        if ($film[6][0][0]!=""){
+                            foreach ($film[6] as $acteur){
+                                $a=$i+2;
+                                if ($i==1){
+                                    echo "<div class='grid grid-cols-2 grid-rows-[40px] lg:grid-rows-[140px] gap-x-[10px] text-[10px] lg:text-[16px] text-center'>";
+                                }
+                                echo"
+                                <div class='flex-col flex'>
+                                    <a href='person.php?person=$acteur[0]' class='overflow-hidden order-$i'>
+                                        <img src='../asset/img/acteurs/$acteur[1]'>
+                                    </a>
+                                    <a href='person.php?person=$acteur[0]' class='order-$a'>$acteur[0]</a>
+                                </div>";
+                                if ($i==2){
+                                    echo"</div>";
+                                }
+                                if ($i==1){
+                                    $i=2;
+                                }
+                                else{
+                                    $i=1;
+                                }
+                            
                             }
-                            echo"
-                            <div class='flex-col flex'>
-                                <a href='person.php?person=$acteur[0]' class='overflow-hidden order-$i'>
-                                    <img src='../asset/img/acteurs/$acteur[1]'>
-                                </a>
-                                <a href='person.php?person=$acteur[0]' class='order-$a'>$acteur[0]</a>
-                            </div>";
                             if ($i==2){
-                                echo"</div>";
+                                echo "</div>";
                             }
-                            if ($i==1){
-                                $i=2;
-                            }
-                            else{
-                                $i=1;
-                            }
-                        
                         }
-                        if ($i==2){
-                            echo "</div>";
+                        else{
+                            echo"<div class='text-center'>pas d'acteurs connus</div>";
                         }
 
                         ?>
@@ -221,10 +297,30 @@ $i=$film[9]+1;
             </div>
         </div>
         <div class='flex-col'>
-            <span class='ml-[9px]'>Films liés</span>
-            <div class=''>
-
-            </div>
+            <?php
+            
+            if (($film[7][0][0]!="") OR ($film[6][0][0]!="") OR ($film[10][0]!="")){
+                    echo"
+                    <span class='ml-[9px]'>Films liés</span>
+                    <div class='flex gap-5 h-[300px]'>";
+                    $i=0;
+                    foreach ($film_lies as $films){
+                        if ($i<7){
+                            $affiche=$film_lies[$i]['affiche'];
+                            $id_film=$film_lies[$i]['id_film'];
+                            if (($id_film!=$_GET['id_film'])){
+                                echo "
+                                    <a href='film.php?id_film=$id_film'>
+                                        <img src='../asset/img/affiches/$affiche' class='h-full'>
+                                    </a>";
+                            }
+                        $i++;
+                        }
+                            
+                    }
+                    echo"</div>";
+            }
+            ?>
             <div class='max-h-[100px] md:max-h-[200px] lg:h-auto lg:max-h-[400px] overflow-y-scroll'>
                 <div class='grid grid-cols-[50px_1fr] md:grid-cols-[70px_1fr] relative'>
                     <div class='flex flex-col'>
