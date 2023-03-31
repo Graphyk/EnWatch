@@ -29,5 +29,4 @@ else{
         header("location:../content/connexion.php?error=wrong-pass");
     }
 }
-die($response);
 ?>

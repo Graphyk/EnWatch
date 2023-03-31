@@ -14,9 +14,8 @@ function connect_bdd($pseudo,$password,$bdd)
     if (password_verify($password,$pass_in_bdd['mdp']))
     {
         // l'utilisateur a rentré le bon mot de passe et se connecte
+        $_SESSION['id_user']=$pass_in_bdd['id_user'];
         $_SESSION['email']=$pass_in_bdd['email'];
-        $_SESSION['nom']=$pass_in_bdd['nom'];
-        $_SESSION['prenom']=$pass_in_bdd['prenom_user'];
         $_SESSION['pp']=$pass_in_bdd["avatar"];
         $_SESSION['pseudo']=$pass_in_bdd["pseudo"];
         $_SESSION['role']=$pass_in_bdd["role"];

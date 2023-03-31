@@ -24,7 +24,8 @@ GROUP_CONCAT(DISTINCT prenom_acteur,' ',nom_acteur,';',photo_acteur,';',acteurs.
 GROUP_CONCAT(DISTINCT prenom_real,' ',nom_real,';',photo_real,';',realisateur.id_realisateur),
 GROUP_CONCAT(DISTINCT lien_photo),
 COUNT(DISTINCT lien_photo),
-GROUP_CONCAT(DISTINCT categorie.id_categorie)
+GROUP_CONCAT(DISTINCT categorie.id_categorie),
+bande_annonce   
 FROM `film`
 LEFT JOIN possede ON film.id_film = possede.id_film
 LEFT JOIN categorie ON possede.id_categorie = categorie.id_categorie
@@ -132,17 +133,15 @@ for ($n;$n<$len;$n++){
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Document</title>
     <link src='../asset/style/reset.css' rel="stylesheet">
-    <link src='../asset/style/style.css' rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Kodchasan:ital@0;1&family=MuseoModerno&family=Roboto&display=swap');
     </style>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.css" rel="stylesheet" />
 </head>
-
 <body>
     <?php
         include("navbar.php");
-    ?> 
+    ?>
     <div class='bg-[#33312E] text-[#1CD4E1] flex flex-col px-[10%] pt-5'>
         <div class='flex flex-col md:flex-row items-center md:items-start'>   
             <div class='flex font-[Kodchasan] gap-2'>
@@ -200,8 +199,8 @@ for ($n;$n<$len;$n++){
                     </div>";}
                     else{
                     echo "
-                    <div class='relative w-[40vw] md:w-[25vw] md:h-[36vw] h-[60vw] overflow-hidden'>    
-                        <div class='w-full h-full bg-[url(../asset/img/affiches/$film[3])]'>
+                    <div class='relative w-[40vw] md:w-[25vw] md:h-[36vw] h-[60vw]'>    
+                        <div class='w-[40vw] md:w-[25vw] h-full bg-[url(../asset/img/affiches/$film[3])]'>
                             <div class='backdrop-blur-lg w-full h-full flex items-center'>
                                 <img src='../asset/img/affiches/$film[3]' class='w-full mx-auto inline-block'>
                             </div>
@@ -209,19 +208,27 @@ for ($n;$n<$len;$n++){
                     </div>";
                     }
                     ?>
-                <div class='relative flex flex-col text-[14px] md:text-[1.2em] h-[66vw] md:w-[25vw] md:h-[40vw]'>
-                    <span class='text-[34px] w-[40vw] md:w-[25vw] lg:text-[50px] inline-block leading-10 mb-4'><?php echo "$film[0]"?></span>
-                    <span class='inline-block'>Date de sortie:<?php echo "$film[1]"?></span>
-                    <span class='inline-block h-[30vw] md:h-[20vw] text-[8px] lg:text-[12px] top-[72px] md:top-[100px] bg-[#33312E] z-10 overflow-hidden' id='description'><?php echo"$film[2]"; ?><br><button id='cacher' class='ml-[35%] text-[12px] bg-[#33312E] border-white border border-solid px-1 md:hidden'>Cacher</button></span>
-                    <button  id='voirPlus' class='md:hidden'>Voir plus</button>
-                    <div class='bg-[#191919] flex items-center absolute z-0 right-0 bottom-0 rounded-[10px]'>
-                        <span class='text-[10px] md:text-[16px] inline-block px-2'>
+                <div class='relative flex flex-col text-[14px] md:text-[1.2em] h-[66vw] md:h-[40vw]'>
+                    <div class='flex flex-col text-[14px] md:text-[1.2em] h-[66vw] md:h-[40vw]'>
+                        <span class='text-[16px] lg:text-[50px] inline-block leading-4 md:leading-10 mb-4'><?php echo "$film[0]"?></span>
+                        <span class='inline-block'>Date de sortie:<?php echo "$film[1]"?></span>
+                        <span class='inline-block h-[50px] md:h-[20vw] text-[8px] lg:text-[12px] top-[72px] md:top-[100px] bg-[#33312E] z-10 overflow-hidden' id='description'><?php echo"$film[2]"; ?><br><button id='cacher' class='ml-[35%] text-[12px] bg-[#33312E] border-white border border-solid px-1 md:hidden'>Cacher</button></span>
+                        <button  id='voirPlus' class='md:hidden'>Voir plus</button>
+                    </div>
+                    <?php
+                    if (isset($_SESSION['connected'])){
+                        echo"
+                    <form class='bg-[#191919] flex items-center self-end absolute z-0 right-0 bottom-0 rounded-[10px] relative overflow-hidden' id='like'>
+                        <input type='submit' class='absolute z-99 opacity-0 w-full h-full' value='$_SESSION[id_user],$_GET[id_film]' >
+                        <span class='text-[9px] md:text-[16px] inline-block px-2'>
                             Ajouter à ma liste
                         </span>
                         <div class='pr-1'>
-                            <img src="../asset/img/logos/Vector.svg" class='w-[20px] h-[20px] md:w-[30px] md:h-[30px] lg:w-[40px] lg:h-[40px]'>
+                            <img src='../asset/img/logos/Vector.svg' class='w-[20px] h-[20px] md:w-[30px] md:h-[30px] lg:w-[40px] lg:h-[40px]'>
                         </div>
-                    </div>
+                    </form>";
+                }
+                    ?>
                 </div>
             </div>
             <div class='flex md:flex-col justify-between md:justify-start gap-2 text-[12px] md:text-[10px] md:h-[40vw] flex-wrap md:items-end md:border-solid md:border-r-black md:border-y-black md:border-2 border-l-transparent'>
@@ -237,7 +244,6 @@ for ($n;$n<$len;$n++){
             <div class='flex md:flex-col gap-4 md:items-center'>
                 <div class='grid grid-cols-1 w-[100px] xl:w-[300px] text-center'>
                     Réalisateurs
-                    
                     <div class='text-[10px] lg:text-[20px] max-h-[300px] overflow-auto flex flex-col items-center'>
                         <?php
                         if ($film[7][0][0]!=""){
@@ -255,7 +261,7 @@ for ($n;$n<$len;$n++){
                 </div>
                 <div class='flex flex-col items-center'>
                     Acteurs
-                    <div class='grid w-[160px] lg:w-[400px] xl:w-[500px] max-h-[150px] overflow-auto'>
+                    <div class='grid w-[100px] xl:w-[300px] max-h-[150px] overflow-auto'>
                         <?php
                         $i=1;
                         if ($film[6][0][0]!=""){
@@ -293,7 +299,6 @@ for ($n;$n<$len;$n++){
                         ?>
                     </div>
                 </div>
-                
             </div>
         </div>
         <div class='flex-col'>
@@ -301,11 +306,11 @@ for ($n;$n<$len;$n++){
             
             if (($film[7][0][0]!="") OR ($film[6][0][0]!="") OR ($film[10][0]!="")){
                     echo"
-                    <span class='ml-[9px]'>Films liés</span>
-                    <div class='flex gap-5 h-[300px]'>";
+                    <span class='flex justify-around'>Films liés</span>
+                    <div class='flex justify-evenly h-[70px] md:h-[170px] lg:h-[220px] xl:h-[300px] w-full'>";
                     $i=0;
                     foreach ($film_lies as $films){
-                        if ($i<7){
+                        if ($i<6){
                             $affiche=$film_lies[$i]['affiche'];
                             $id_film=$film_lies[$i]['id_film'];
                             if (($id_film!=$_GET['id_film'])){
@@ -321,6 +326,9 @@ for ($n;$n<$len;$n++){
                     echo"</div>";
             }
             ?>
+             <div class='flex justify-around h-[168px] md:h-[336px] mt-5'>
+                <iframe src='https://www.youtube.com/embed/<?php echo"$film[11] " ?>' class='md:w-[600px]' frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
             <div class='max-h-[100px] md:max-h-[200px] lg:h-auto lg:max-h-[400px] overflow-y-scroll'>
                 <div class='grid grid-cols-[50px_1fr] md:grid-cols-[70px_1fr] relative'>
                     <div class='flex flex-col'>
@@ -360,5 +368,6 @@ for ($n;$n<$len;$n++){
     ?>  
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.js"></script>
     <script src="../asset/script.js"></script>
+    <script src="../asset/script/film.js"></script>
 </body>
 </html>

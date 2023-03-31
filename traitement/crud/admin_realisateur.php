@@ -61,7 +61,7 @@ try {
         <tr>
             <td colspan="4" class='px-10 py-5 border border-black border-solid text-center'>Ajouter un élément</td>
         </tr>
-            <form action='form/traitement_crud/ajout_acteur_traitement.php' enctype="multipart/form-data" method='POST'>
+            <form action='form/traitement_crud/ajout_real_traitement.php' enctype="multipart/form-data" method='POST'>
             <tr>
                 <td class='px-10 py-5 border border-black border-solid text-center'><?php $last+=1;
                                                                                         echo "$last" ?></td>

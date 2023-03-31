@@ -45,10 +45,11 @@ try {
             <th scope='col' class='px-10 py-5 max-w-[20vw] border border-black border-solid'>date_sorti</th>
             <th scope='col' class='px-10 py-5 max-w-[20vw] border border-black border-solid'>synopsis</th>
             <th scope='col' class='px-10 py-5 max-w-[20vw] border border-black border-solid'>affiche</th>
+            <th scope='col' class='px-10 py-5 max-w-[20vw] border border-black border-solid'>Bande annonce</th>
             <th scope='col' class='px-10 py-5 max-w-[20vw] border border-black border-solid'>Realisateur</th>
-            <th scope='col' class='px-10 py-5 max-w-[20vw] border border-black border-solid'>Catégories</th>
+            <th scope='col' class='px-10 py-5 max-w-[20vw] border border-black border-solid'>Catégories</th>    
             <th scope='col' class='px-10 py-5 max-w-[20vw] border border-black border-solid'>Acteurs</th>
-            <th scope='col' class='px-10 py-5 max-w-[20vw] border border-black border-solid'>Image</th>
+            <th scope='col' class='px-10 py-5 max-w-[20vw] border border-black border-solid'>Image</th>         
         </tr>
         <?php
         while ($row = $stmt->fetch(PDO::FETCH_NUM, PDO::FETCH_ORI_NEXT)){
@@ -77,7 +78,7 @@ try {
             $photo->execute();
             echo"
             <tr>";
-            for ($i;$i<5;$i++){
+            for ($i;$i<6;$i++){
                 echo"
                 <td class='px-10 py-5 max-w-[20vw] border border-black border-solid'>$row[$i]</td>";
                 }
@@ -109,7 +110,7 @@ try {
         }
         ?>
         <tr>
-            <td colspan="9" class='px-10 py-5 border border-black border-solid text-center'>Ajouter un élément</td>
+            <td colspan="9" class='border border-black border-solid text-center bg-green-200'><a href='form/ajout_film.php' class='h-full w-full '><button class='h-full w-full inline-block px-10 py-5'>Ajouter Film</button></a></td>
         </tr>
     </table>
 </div>

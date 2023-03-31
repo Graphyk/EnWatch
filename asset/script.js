@@ -37,11 +37,15 @@ function toggleDrop(menu){
 function showMore(button,description){
     button.classList.toggle("hidden");
     description.classList.toggle("overflow-hidden");
-    description.classList.toggle("h-[30vw]");
+    description.classList.toggle("h-auto");
 }
 dropdownBtn1.addEventListener("click", () => { toggleDrop(dropdownMenu1);});
 dropdownBtn2.addEventListener("click", () => { toggleDrop(dropdownMenu2);});
 dropdownBtn3.addEventListener("click", () => { toggleDrop(dropdownMenu3);});
 burgerBtn.addEventListener("click", () => { toggleNav(burgerMenu);});
+if (show != null){
 show.addEventListener("click",() =>{showMore(show,desc);});
+}
+if (hide != null){
 hide.addEventListener("click",() =>{showMore(show,desc);});
+}

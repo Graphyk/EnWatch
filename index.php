@@ -44,12 +44,15 @@ $real->execute();
     <?php
         include("content/navbar.php");
     ?>  
+    
     <!-- main container -->
+    <div class='bg-[#33312E] text-[#1CD4E1] pl-5 pg:ml-20 flex flex-col font-[Kodchasan] pt-[150px] sticky top-[45px]' id='header'><span></span>
+    </div>
+    <div class='bg-[url(asset/img/parallax.jpeg)] text-[#1CD4E1] font-[Kodchasan] flex flex-col pl-2 md:pl-28 bg-fixed bg-center bg-no-repeat bg-cover flex justify-end' id='parallax'>
+        <span class='text-[32px] lg:text-[48px] hidden title text-transparen'>Bonjour,</span>
+        <span class='inline-block lg:text-[32px] ml-[15vw] hidden title text-transparent' >Que voulez vous regarder ?</span>
+    </div>
     <div class='bg-[#33312E] text-[#1CD4E1] flex flex-col'>
-        <div class='ml-5 lg:ml-20 flex flex-col font-[Kodchasan]  pt-[100px] '>
-            <span class='text-[32px] lg:text-[48px]'>Bonjour,</span>
-            <span class='inline-block lg:text-[32px] ml-[15vw]'>Que voulez vous regarder ?</span>
-        </div>
         <span class='font-[Roboto] ml-5 lg:text-[24px] inline-block lg:ml-20 mt-5'>Nouveautés</span>
         <div id="default-carousel" class="relative w-full h-[40vw] lg:h-[24vw]" data-carousel="static">
             <!-- Carousel wrapper -->
@@ -198,9 +201,9 @@ $real->execute();
                                         <div class='mt-px w-[18vw] h-[18vw] bg-[#1B1917] outline outline-1 outline-white hidden lg:flex flex-col'>
                                             <div class='flex justify-evenly mt-[20px] overflow-hidden h-[65%]' >";
                                             if ($film1!=FALSE){
-                                                echo "<a href='content/film.php?film=$film1[id_film]' class='inline-block h-full'><img src='asset/img/affiches/$film1[affiche]' class='inline-block h-full'></a>";
+                                                echo "<a href='content/film.php?id_film=$film1[id_film]' class='inline-block h-full'><img src='asset/img/affiches/$film1[affiche]' class='inline-block h-full'></a>";
                                                 if ($film2!=FALSE){
-                                                    echo "<a href='content/film.php?film=$film2[id_film]' class='inline-block h-full'><img src='asset/img/affiches/$film2[affiche]' class='inline-block h-full'></a>";
+                                                    echo "<a href='content/film.php?id_film=$film2[id_film]' class='inline-block h-full'><img src='asset/img/affiches/$film2[affiche]' class='inline-block h-full'></a>";
                                                     }
                                                 }
                                                 else{
@@ -244,9 +247,9 @@ $real->execute();
                                         <div class='mt-px w-[18vw] h-[18vw] bg-[#1B1917] outline outline-1 outline-white hidden lg:flex flex-col'>
                                             <div class='flex justify-evenly mt-[20px] overflow-hidden h-[65%]' >";
                                             if ($film1!=FALSE){
-                                                echo "<a href='content/film.php?film=$film1[id_film]' class='inline-block h-full'><img src='asset/img/affiches/$film1[affiche]' class='inline-block h-full'></a>";
+                                                echo "<a href='content/film.php?id_film=$film1[id_film]' class='inline-block h-full'><img src='asset/img/affiches/$film1[affiche]' class='inline-block h-full'></a>";
                                                 if ($film2!=FALSE){
-                                                    echo "<a href='content/film.php?film=$film2[id_film]' class='inline-block h-full'><img src='asset/img/affiches/$film2[affiche]' class='inline-block h-full'></a>";
+                                                    echo "<a href='content/film.php?id_film=$film2[id_film]' class='inline-block h-full'><img src='asset/img/affiches/$film2[affiche]' class='inline-block h-full'></a>";
                                                     }
                                                 }
                                                 else{
@@ -606,5 +609,6 @@ $real->execute();
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.js"></script>
     <script src="asset/script.js"></script>
+    <script src="asset/script/index.js"></script>
 </body>
 </html>

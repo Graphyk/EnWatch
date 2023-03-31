@@ -18,14 +18,14 @@ try {
             throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
 
-$nom_acteur=htmlspecialchars(strip_tags($_POST['nom_real']));
-$prenom_acteur=htmlspecialchars(strip_tags($_POST['prenom_real']));
+$nom_real=htmlspecialchars(strip_tags($_POST['nom_real']));
+$prenom_real=htmlspecialchars(strip_tags($_POST['prenom_real']));
 $image_name=uniqid().".".explode("/",$_FILES['image_uploads']['type'])[1];
 
 
 move_uploaded_file($_FILES["image_uploads"]["tmp_name"],"C:/wamp64/www/EnWatch/asset/img/acteurs/".$image_name);
 
-$SQL="INSERT INTO acteurs (nom_acteur,prenom_acteur,photo_acteur) VALUES (?,?,?)";
+$SQL="INSERT INTO realisateur (nom_real,prenom_real,photo_real) VALUES (?,?,?)";
 $stmt=$pdo -> prepare($SQL);
 $stmt -> bindParam(1,$nom_real);
 $stmt -> bindParam(2,$prenom_real);
