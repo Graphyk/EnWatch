@@ -14,6 +14,15 @@ session_start();
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <?php
+if (isset($_SESSION["role"])){
+    if ($_SESSION['role']<1){
+        echo "<script src='../../asset\script/redirect.js'";
+    }
+}
+else {
+    echo "<script src='../../asset\script/redirect.js'";
+}
+
 $host = '127.0.0.1';
 $db   = 'enwatch';
 $user = 'root';

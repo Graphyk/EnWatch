@@ -1,4 +1,13 @@
 <?php
+session_start();
+if (isset($_SESSION["role"])){
+    if ($_SESSION['role']<1){
+        echo "<script src='../../asset\script/redirect.js'";
+    }
+}
+else {
+    echo "<script src='../../asset\script/redirect.js'";
+}
 $host = '127.0.0.1';
 $db   = 'enwatch';
 $user = 'root';

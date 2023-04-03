@@ -1,4 +1,5 @@
-<?php session_start();
+<?php
+session_start();
 ?>
 
 <!DOCTYPE html>
@@ -16,7 +17,16 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.css" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<?php include('../../content/navbar.php')
+<?php
+if (isset($_SESSION["role"])){
+    if ($_SESSION['role']<1){
+        echo "<script src='../../asset\script/redirect.js'";
+    }
+}
+else {
+    echo "<script src='../../asset\script/redirect.js'";
+}
+include('../../content/navbar.php')
 ?>
 <div class='flex flex-col gap-10 my-5 align-center w-full'>
     <div class='flex gap-3 justify-center'>

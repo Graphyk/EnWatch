@@ -13,6 +13,14 @@ session_start();
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.css" rel="stylesheet" />
 </head>
 <?php
+if (isset($_SESSION["role"])){
+    if ($_SESSION['role']<1){
+        echo "<script src='../../asset\script/redirect.js'";
+    }
+}
+else {
+    echo "<script src='../../asset\script/redirect.js'";
+}
     
 $host = '127.0.0.1';
 $db   = 'enwatch';

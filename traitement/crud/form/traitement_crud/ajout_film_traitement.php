@@ -8,6 +8,15 @@ real_[id_real]
 categorie_[id_categorie]
 acteur_[act]-->
 <?php
+session_start();
+if (isset($_SESSION["role"])){
+    if ($_SESSION['role']<1){
+        echo "<script src='../../asset\script/redirect.js'";
+    }
+}
+else {
+    echo "<script src='../../asset\script/redirect.js'";
+}
 $values=array();
 if ($_POST['titre']==""){
     header("location:../ajout_film.php?error=no_title");
