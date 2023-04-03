@@ -11,19 +11,22 @@ acteur_[act]-->
 session_start();
 if (isset($_SESSION["role"])){
     if ($_SESSION['role']<1){
-        echo "<script src='../../asset\script/redirect.js'";
+        echo "<script src='../../../../asset\script/redirect.js'";
     }
 }
 else {
-    echo "<script src='../../asset\script/redirect.js'";
+    echo "<script src='../../../../asset\script/redirect.js'";
 }
 $values=array();
-if ($_POST['titre']==""){
+if (empty($_POST['titre'])){
     header("location:../ajout_film.php?error=no_title");
+    exit;
 }
+
 $values[]=htmlspecialchars(strip_tags($_POST['titre']));
-if (!isset($_POST['sortie'])){
+if (empty($_POST['sortie'])){
     header("location:../ajout_film.php?error=no_date");
+    exit;
 }
 if ($_POST['sortie']=="unknown"){
     $_POST['sortie']='Inconnue';
@@ -34,7 +37,8 @@ else{
 $values[]=$_POST['sortie'];
 $len_syn=strlen($_POST['synopsis']);
 if ($len_syn==0 or $len_syn>511){
-     header("location:../ajout_film.php?error=wrong_synopsis");
+    header("location:../ajout_film.php?error=wrong_synopsis");
+    exit;
 }
 $values[]=$_POST['synopsis'];
 $image_type=explode("/",$_FILES['image_uploads']['type'])[1];
@@ -47,6 +51,7 @@ foreach ($accepted_type as $type){
 }
 if (!$image_type_isok){
     header("location:../ajout_film.php?error=wrong_image_type");
+    exit;
 }
 $image_name=uniqid().".".$image_type;
 $values[]=$image_name;
@@ -54,14 +59,20 @@ $values[]=$image_name;
 
 if(!(move_uploaded_file($_FILES["image_uploads"]["tmp_name"],"C:/wamp64/www/EnWatch/asset/img/affiches/".$image_name))){
     header("location:../ajout_film.php?error=failed_upload");
+    exit;
 }
 if (!empty($_POST["b_a"])){
     $bande_annonce=explode("/",$_POST["b_a"]);
     $bande_annonce=explode('" title',$bande_annonce[4])[0];
+    if (strlen($bande_annonce)!=11){
+        header("location:../ajout_film.php?error=no_b_a");
+        exit;
+    }
     $values[]=$bande_annonce;
 }
 else{
     header("location:../ajout_film.php?error=no_b_a");
+    exit;
 }
 
 $host = '127.0.0.1';

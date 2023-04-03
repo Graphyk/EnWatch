@@ -26,19 +26,13 @@ try {
     } catch (\PDOException $e) {
             throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
+if (empty($_POST['delete_real'])){
+    header("location:../../admin_film.php");
+}
+$values=explode(",",$_POST['delete_real']);
+$sql="DELETE FROM realise WHERE id_film=$values[1] And id_realisateur=$values[0]";
+$stmt=$pdo->prepare($sql);
+$stmt->execute();
+header("location:../../admin_film.php?message=successful_suppr");
 
-$nom_real=htmlspecialchars(strip_tags($_POST['nom_real']));
-$prenom_real=htmlspecialchars(strip_tags($_POST['prenom_real']));
-$image_name=uniqid().".".explode("/",$_FILES['image_uploads']['type'])[1];
-
-
-move_uploaded_file($_FILES["image_uploads"]["tmp_name"],"C:/wamp64/www/EnWatch/asset/img/acteurs/".$image_name);
-
-$SQL="INSERT INTO realisateur (nom_real,prenom_real,photo_real) VALUES (?,?,?)";
-$stmt=$pdo -> prepare($SQL);
-$stmt -> bindParam(1,$nom_real);
-$stmt -> bindParam(2,$prenom_real);
-$stmt -> bindParam(3,$image_name);
-$stmt -> execute();
-header("location:../../admin_realisateur.php")
 ?>

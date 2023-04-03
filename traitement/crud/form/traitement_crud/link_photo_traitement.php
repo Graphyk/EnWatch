@@ -2,11 +2,11 @@
 session_start();
 if (isset($_SESSION["role"])){
     if ($_SESSION['role']<1){
-        echo "<script src='../../asset\script/redirect.js'";
+        echo "<script src='../../../../asset\script/redirect.js'";
     }
 }
 else {
-    echo "<script src='../../asset\script/redirect.js'";
+    echo "<script src='../../../../asset\script/redirect.js'";
 }
 $host = '127.0.0.1';
 $db   = 'enwatch';
@@ -30,7 +30,7 @@ try {
 $image_name=uniqid().".".explode("/",$_FILES['image_uploads']['type'])[1];
     
 
-move_uploaded_file($_FILES["image_uploads"]["tmp_name"],"C:/wamp64/www/EnWatch/asset/img/acteurs/".$image_name);
+move_uploaded_file($_FILES["image_uploads"]["tmp_name"],"C:/wamp64/www/EnWatch/asset/img/img_film/".$image_name);
 
 $SQL="INSERT INTO photo_film (lien_photo,id_film) VALUES (?,?)";
 $stmt=$pdo -> prepare($SQL);
