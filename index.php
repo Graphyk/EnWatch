@@ -46,10 +46,10 @@ $real->execute();
     ?>  
     
     <!-- main container -->
-    <div class='bg-[#33312E] text-[#1CD4E1] pl-5 pg:ml-20 flex flex-col font-[Kodchasan] pt-[150px] sticky top-[45px]' id='header'><span></span>
+    <div class='bg-[#33312E] text-[#1CD4E1] z-10 pl-5 flex flex-col font-[Kodchasan] pt-[150px] sticky top-[45px]' id='header'><span></span>
     </div>
-    <div class='bg-[url(asset/img/parallax.jpeg)] text-[#1CD4E1] font-[Kodchasan] flex flex-col pl-2 md:pl-28 bg-fixed bg-center bg-no-repeat bg-cover flex justify-end' id='parallax'>
-        <span class='text-[32px] lg:text-[48px] hidden title text-transparen'>Bonjour,</span>
+    <div class='bg-[url(asset/img/parallax.jpeg)] text-[#1CD4E1] relative font-[Kodchasan] flex flex-col pl-2 md:pl-28 bg-fixed bg-center bg-no-repeat bg-cover flex justify-end' id='parallax'>
+        <span class='text-[32px] lg:text-[48px] hidden title text-transparent'>Bonjour,</span>
         <span class='inline-block lg:text-[32px] ml-[15vw] hidden title text-transparent' >Que voulez vous regarder ?</span>
     </div>
     <div class='bg-[#33312E] text-[#1CD4E1] flex flex-col'>
@@ -64,14 +64,14 @@ $real->execute();
                     for ($i;$i<5;$i++){
                             $result=$stmt ->fetch(PDO::FETCH_ASSOC,PDO::FETCH_ORI_ABS,$i);
                             if (($i==0) or ($i==4)){
-                                echo"<div>
+                                echo"<a href='content/film.php?id_film=$result[id_film]'>
                                     <img src='asset/img/affiches/$result[affiche]' class='w-[15vw] hidden lg:inline-block'  alt='$result[nom]'>
-                                </div>";
+                                </a>";
                             }
                             else{
-                                echo"<div>
-                                    <img src='asset/img/affiches/$result[affiche]' class='w-[25vw] lg:w-[15vw]'  alt='$result[nom]'>
-                                    </div>";
+                                echo"<a href='content/film.php?id_film=$result[id_film]'>
+                                        <img src='asset/img/affiches/$result[affiche]' class='w-[25vw] lg:w-[15vw]'  alt='$result[nom]'>
+                                    </a>";
                             }
                             
                             } ?>
@@ -84,14 +84,14 @@ $real->execute();
                     for ($i;$i<10;$i++){
                             $result=$stmt ->fetch(PDO::FETCH_ASSOC,PDO::FETCH_ORI_ABS,$i);
                             if (($i==5) or ($i==6)){
-                                echo"<div>
+                                echo"<a href='content/film.php?id_film=$result[id_film]'>
                                     <img src='asset/img/affiches/$result[affiche]' class='w-[15vw] hidden lg:inline-block'  alt='$result[nom]'>
-                                </div>";
+                                </a>";
                             }
                             else{
-                                echo"<div>
+                                echo"<a href='content/film.php?id_film=$result[id_film]'>
                                     <img src='asset/img/affiches/$result[affiche]' class='w-[25vw] lg:w-[15vw]'  alt='$result[nom]'>
-                                    </div>";
+                                    </a>";
                             }
                         }?>
                     </div>
@@ -103,14 +103,14 @@ $real->execute();
                     for ($i;$i<15;$i++){
                             $result=$stmt ->fetch(PDO::FETCH_ASSOC,PDO::FETCH_ORI_ABS,$i);
                             if (($i==10) or ($i==14)){
-                                echo"<div>
+                                echo"<a href='content/film.php?id_film=$result[id_film]'>
                                     <img src='asset/img/affiches/$result[affiche]' class='w-[15vw] hidden lg:inline-block'  alt='$result[nom]'>
-                                </div>";
+                                </a>";
                             }
                             else{
-                                echo"<div>
+                                echo"<a href='content/film.php?id_film=$result[id_film]'>
                                     <img src='asset/img/affiches/$result[affiche]' class='w-[25vw] lg:w-[15vw]'  alt='$result[nom]'>
-                                    </div>";
+                                    </a>";
                             }
                             }?>
                     </div>
@@ -122,14 +122,14 @@ $real->execute();
                     for ($i;$i<20;$i++){
                             $result=$stmt ->fetch(PDO::FETCH_ASSOC,PDO::FETCH_ORI_ABS,$i);
                             if (($i==15) or ($i==19)){
-                                echo"<div>
+                                echo"<a href='content/film.php?id_film=$result[id_film]'>
                                     <img src='asset/img/affiches/$result[affiche]' class='w-[15vw] hidden lg:inline-block'  alt='$result[nom]'>
-                                </div>";
+                                </a>";
                             }
                             else{
-                                echo"<div>
+                                echo"<a href='content/film.php?id_film=$result[id_film]'>
                                     <img src='asset/img/affiches/$result[affiche]' class='w-[25vw] lg:w-[15vw]'  alt='$result[nom]'>
-                                    </div>";
+                                    </a>";
                             }}?>
                     </div>
                 </div>
@@ -140,14 +140,14 @@ $real->execute();
                     for ($i;$i<25;$i++){
                             $result=$stmt ->fetch(PDO::FETCH_ASSOC,PDO::FETCH_ORI_ABS,$i);
                             if (($i==20) or ($i==24)){
-                                echo"<div>
+                                echo"<a href='content/film.php?id_film=$result[id_film]'>
                                     <img src='asset/img/affiches/$result[affiche]' class='w-[15vw] hidden lg:inline-block'  alt='$result[nom]'>
-                                </div>";
+                                </a>";
                             }
                             else{
-                                echo"<div>
+                                echo"<a href='content/film.php?id_film=$result[id_film]'>
                                     <img src='asset/img/affiches/$result[affiche]' class='w-[25vw] lg:w-[15vw]'  alt='$result[nom]'>
-                                    </div>";
+                                    </a>";
                             }
                                 } ?>
                     </div>

@@ -55,13 +55,7 @@
                 </div> 
                     <span class='pr-[20px] pt-1 rounded-lg rotate-45 bg-black inline-block'></span><span class='pr-[20px] -ml-[8.5px] pt-1 -rotate-45 rounded-lg bg-black inline-block'></span></span></span>
                 <?php
-                if (!isset($_SESSION["connected"])){
-                echo"
-                <div class='hidden md:flex -ml-[12px] text-[16px] flex-col'>
-                    <a href='/ENWATCH/content/inscription.php'>Inscription</a>
-                    <a href='/ENWATCH/content/connexion.php' class='text-[#8E1CBB]'>Connexion</a>
-                </div>";}
-                else{
+                if (isset($_SESSION["connected"])){
                     if ($_SESSION["role"]>=1){
                         echo "<a href='/ENWATCH/traitement/crud/admin.php'>admin</a>";
                     }  
@@ -78,7 +72,13 @@
                             </div>
                         </a>";
             }
-            ?>
+            else{
+                echo"
+                <div class='hidden md:flex -ml-[12px] text-[16px] flex-col'>
+                    <a href='/ENWATCH/content/inscription.php'>Inscription</a>
+                    <a href='/ENWATCH/content/connexion.php' class='text-[#8E1CBB]'>Connexion</a>
+                </div>";}
+                         ?>
         </div>
     </div>
     <button id='OpenBtn' class='flex flex-col justify-evenly h-[25px] mr-[20px] md:hidden'>

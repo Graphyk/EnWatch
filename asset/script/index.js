@@ -2,9 +2,7 @@ const parallaxElt=document.getElementById("parallax");
 const header=document.getElementById("header");
 var title=document.getElementsByClassName("title");
 parallaxElt.style.height = '600px';
-console.log(header.firstChild);
 var title=Array.prototype.slice.call(title);
-console.log(title);
 
 window.addEventListener("scroll",()=>{parallax();})
 function parallax(){
@@ -22,7 +20,9 @@ function parallax(){
         title.forEach(element => element.classList.add("transition-all"));
         title.forEach(element => element.classList.add("ease-in-out"));
         title.forEach(element => element.classList.add("duration-1000"));
+        header.firstChild.style.paddingTop="0px"
         header.classList.remove('sticky');
+        header.classList.remove('pt-[150px]');
         }
 }
 
