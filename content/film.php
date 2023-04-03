@@ -303,7 +303,6 @@ for ($n;$n<$len;$n++){
         </div>
         <div class='flex-col'>
             <?php
-            
             if (($film[7][0][0]!="") OR ($film[6][0][0]!="") OR ($film[10][0]!="")){
                     echo"
                     <span class='flex justify-around'>Films liés</span>
@@ -329,17 +328,22 @@ for ($n;$n<$len;$n++){
              <div class='flex justify-around h-[168px] md:h-[336px] mt-5'>
                 <iframe src='https://www.youtube.com/embed/<?php echo"$film[11] " ?>' class='md:w-[600px]' frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
             </div>
+            <?php
+            echo "
             <div class='max-h-[100px] md:max-h-[200px] lg:h-auto lg:max-h-[400px] overflow-y-scroll'>
-                <div class='grid grid-cols-[50px_1fr] md:grid-cols-[70px_1fr] relative'>
-                    <div class='flex flex-col'>
-                        <img src='../asset/img/avatar/user_avatar.png'>
-                        <span class='text-[12px]'>Pseudo</span>
+                <div class='grid grid-cols-[50px_1fr] md:grid-cols-[70px_1fr] relative ml-[70px]'>
+                    <div class='flex flex-col items-center'>
+                        <div class='w-[50px] h-[50px] md:w-[70px] md:h-[70px] overflow-hidden rounded-full'>
+                            <img src='../asset/img/avatar/$_SESSION[pp]'>
+                        </div>
+                        <span class='text-[12px]'>$_SESSION[pseudo]</span>
                     </div>
                     <div class='ml-2 '>
                         <div class='inline-block h-0 w-0 border-b-[10px] ml-2 border-b-[#1CD4E1] -mb-2 border-r-[9px] border-solid border-r-transparent'></div>
-                        <div class='bg-[#1CD4E1] text-black rounded-lg w-fit text-[10px] md:text-[14px] px-2 py-1'>Super film !</div>
+                        <form class='bg-[#1CD4E1] text-black rounded-lg w-fit text-[10px] md:text-[14px] px-2 py-1'><textarea rows='3' cols='120'></textarea></form>
                     </div>
-                </div>
+                </div>";
+            ?>
                 <div class='grid grid-cols-[50px_1fr] md:grid-cols-[70px_1fr] relative'>
                     <div class='flex flex-col'>
                         <img src='../asset/img/avatar/user_avatar.png'>
