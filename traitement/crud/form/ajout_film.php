@@ -95,7 +95,13 @@ $cats->execute();
                 <div class='flex flex-col items-start'>
                     <div class='relative pb-5 border border-black border-solid'>
                         <div class='relative'>
-                            <textarea name='synopsis' id='textarea' class='relative border-transparent' rows="6"></textarea><span class='inline-block absolute right-px z-0 bottom-px w-4 h-4 bg-white'></span></div><span class='absolute bottom-0 right-0' id='compteur'></span></div>
+                            <textarea name='synopsis' id='textarea' class='relative border-transparent' rows="6"></textarea>
+                            <span class='inline-block absolute right-px z-0 bottom-px w-4 h-4 bg-white'>
+                            </span>
+                        </div>
+                        <span class='absolute bottom-0 right-0' id='compteur'>
+                        </span>
+                    </div>
                     <?php
                         if (isset($_GET['error'])){
                             if($_GET['error']=='wrong_synopsis'){

@@ -2,7 +2,13 @@
 function connect_bdd($pseudo,$password,$bdd)
 {
 
-    $sql = "SELECT * FROM `utilisateurs` WHERE pseudo=? LIMIT 1";
+    $sql = "
+    SELECT utilisateurs.id_user,email,avatar,pseudo,role,mdp,group_concat(id_film SEPARATOR '|') AS fav 
+	FROM `utilisateurs` 
+    LEFT JOIN aime ON utilisateurs.id_user = aime.id_user 
+    WHERE pseudo=?
+    GROUP BY utilisateurs.id_user
+    LIMIT 1 ";
     $stmt = $bdd ->prepare($sql);
     $stmt -> bindParam(1,$pseudo);
     $stmt->execute();
@@ -19,6 +25,7 @@ function connect_bdd($pseudo,$password,$bdd)
         $_SESSION['pp']=$pass_in_bdd["avatar"];
         $_SESSION['pseudo']=$pass_in_bdd["pseudo"];
         $_SESSION['role']=$pass_in_bdd["role"];
+        $_SESSION['fav']=explode("|",$pass_in_bdd["fav"]);
         return "connected";
     }
     else    

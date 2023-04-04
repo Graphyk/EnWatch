@@ -1,4 +1,3 @@
-
 var input = document.querySelector('#image_uploads');
 var preview = document.querySelector('.preview');
 var cross = document.querySelector('#cross');

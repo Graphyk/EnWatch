@@ -26,7 +26,8 @@ GROUP_CONCAT(DISTINCT lien_photo),
 COUNT(DISTINCT lien_photo),
 GROUP_CONCAT(DISTINCT categorie.id_categorie),
 bande_annonce,
-GROUP_CONCAT(DISTINCT commentaire.contenu,'/',utilisateurs.avatar,'/',utilisateurs.pseudo SEPARATOR '|')
+GROUP_CONCAT(DISTINCT commentaire.contenu,'/',utilisateurs.avatar,'/',utilisateurs.pseudo SEPARATOR '|'),
+COUNT(DISTINCT aime.id_user) as fav
 FROM `film`
 LEFT JOIN possede ON film.id_film = possede.id_film
 LEFT JOIN categorie ON possede.id_categorie = categorie.id_categorie
@@ -37,6 +38,7 @@ LEFT JOIN realisateur ON realise.id_realisateur = realisateur.id_realisateur
 LEFT JOIN photo_film ON film.id_film = photo_film.id_film
 LEFT JOIN commentaire ON film.id_film = commentaire.id_film
 LEFT JOIN utilisateurs ON commentaire.id_user = utilisateurs.id_user
+LEFT JOIN aime ON film.id_film = aime.id_film
 WHERE film.id_film=?
 GROUP BY film.id_film";
 
@@ -213,7 +215,7 @@ for ($n;$n<$len;$n++){
                     </div>";}
                     else{
                     echo "
-                    <div class='relative w-[40vw] md:w-[25vw] md:h-[36vw] h-[60vw]'>    
+                    <div class='relative w-[40vw] md:w-[25vw] md:h-[36vw] h-[60vw]'>
                         <div class='w-[40vw] md:w-[25vw] h-full bg-[url(../asset/img/affiches/$film[3])]'>
                             <div class='backdrop-blur-lg w-full h-full flex items-center'>
                                 <img src='../asset/img/affiches/$film[3]' class='w-full mx-auto inline-block'>
@@ -225,22 +227,55 @@ for ($n;$n<$len;$n++){
                 <div class='relative flex flex-col text-[14px] md:text-[1.2em] h-[66vw] md:h-[40vw]'>
                     <div class='flex flex-col text-[14px] md:text-[1.2em] h-[66vw] md:h-[40vw]'>
                         <span class='text-[16px] lg:text-[50px] inline-block leading-4 md:leading-10 mb-4'><?php echo "$film[0]"?></span>
-                        <span class='inline-block'>Date de sortie:<?php echo "$film[1]"?></span>
-                        <span class='inline-block h-[50px] md:h-[20vw] text-[8px] lg:text-[12px] top-[72px] md:top-[100px] bg-[#33312E] z-10 overflow-hidden' id='description'><?php echo"$film[2]"; ?><br><button id='cacher' class='ml-[35%] text-[12px] bg-[#33312E] border-white border border-solid px-1 md:hidden'>Cacher</button></span>
+                        <span class='inline-block text-slate-100'>Date de sortie:<?php echo "$film[1]"?></span>
+                        <span class='inline-block h-[50px] md:h-[20vw] text-[8px] lg:text-[12px] top-[72px] md:top-[100px] bg-[#33312E] text-slate-100 z-10 overflow-hidden' id='description'><?php echo"$film[2]"; ?><br><button id='cacher' class='ml-[35%] text-[12px] bg-[#33312E] border-white border border-solid px-1 md:hidden'>Cacher</button></span>
                         <button  id='voirPlus' class='md:hidden'>Voir plus</button>
                     </div>
                     <?php
-                    if (isset($_SESSION['connected'])){
+                    if (isset($_SESSION['fav'])){
+                        $infav=FALSE;
+                        foreach($_SESSION['fav'] as $fav){
+                            if ($_GET['id_film']==$fav){
+                                $infav=TRUE;
+                            }
+                        }
+                        if ($infav){
+                            echo"
+                            <div class='flex w-fit self-end'>
+                                <div class='flex items-end text-[28px]'>
+                                    $film[13]
+                                </div>
+                                <form class='bg-[#1CD4E1] text-[#191919] flex items-center self-end absolute z-0 right-0 bottom-0 rounded-[10px] relative overflow-hidden' method='POST' action='../traitement/traitement_unfav.php' id='like'>
+                                    <input type='submit' class='absolute z-99 opacity-0 w-full h-full' name='ids' value='$_SESSION[id_user],$_GET[id_film]' >
+                                    <span class='text-[9px] md:text-[16px] inline-block px-2'>
+                                        Retirer de ma liste
+                                    </span>
+                                    <div class='pr-1'>
+                                        <img src='../asset/img/logos/like.svg' class='w-[20px] h-[20px] md:w-[30px] md:h-[30px] lg:w-[40px] lg:h-[40px]'>
+                                    </div>       
+                                </form>        
+                            </div>"
+                            ;
+
+
+                        }
+                        else{
                         echo"
-                    <form class='bg-[#191919] flex items-center self-end absolute z-0 right-0 bottom-0 rounded-[10px] relative overflow-hidden' id='like'>
-                        <input type='submit' class='absolute z-99 opacity-0 w-full h-full' value='$_SESSION[id_user],$_GET[id_film]' >
-                        <span class='text-[9px] md:text-[16px] inline-block px-2'>
-                            Ajouter à ma liste
-                        </span>
-                        <div class='pr-1'>
-                            <img src='../asset/img/logos/Vector.svg' class='w-[20px] h-[20px] md:w-[30px] md:h-[30px] lg:w-[40px] lg:h-[40px]'>
+                    <div class='flex w-fit self-end'>
+                        <div class='flex items-end text-[28px]'>
+                            $film[13]
                         </div>
-                    </form>";
+                        <form class='bg-[#191919] flex items-center self-end absolute z-0 right-0 bottom-0 rounded-[10px] relative overflow-hidden' method='POST' action='../traitement/traitement_fav.php' id='like'>
+                            <input type='submit' class='absolute z-99 opacity-0 w-full h-full' name='ids' value='$_SESSION[id_user],$_GET[id_film]' >
+                                <span class='text-[9px] md:text-[16px] inline-block px-2'>
+                                    Ajouter à ma liste
+                                </span>
+                                <div class='pr-1'>
+                                    <img src='../asset/img/logos/Vector.svg' class='w-[20px] h-[20px] md:w-[30px] md:h-[30px] lg:w-[40px] lg:h-[40px]'>
+                                </div>
+                        </form>
+                    </div>";
+                }
                 }
                     ?>
                 </div>
@@ -275,7 +310,7 @@ for ($n;$n<$len;$n++){
                 </div>
                 <div class='flex flex-col items-center'>
                     Acteurs
-                    <div class='grid w-[100px] xl:w-[300px] max-h-[150px] overflow-auto'>
+                    <div class='grid w-[100px] xl:w-[300px] max-h-[150px] overflow-y-auto'>
                         <?php
                         $i=1;
                         if ($film[6][0][0]!=""){
@@ -315,7 +350,7 @@ for ($n;$n<$len;$n++){
                 </div>
             </div>
         </div>
-        <div class='flex-col'>
+        <div class='flex flex-col items-center'>
             <?php
             if (($film[7][0][0]!="") OR ($film[6][0][0]!="") OR ($film[10][0]!="")){
                     echo"
@@ -343,9 +378,10 @@ for ($n;$n<$len;$n++){
                 <iframe src='https://www.youtube.com/embed/<?php echo"$film[11] " ?>' class='md:w-[600px]' frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
             </div>
             <?php
+                    if (isset($_SESSION['id_user'])){
                     echo "
-                <div class='max-h-[100px] mt-5 md:max-h-[200px] lg:h-auto lg:max-h-[400px] overflow-y-scroll'>
-                    <div class='grid grid-cols-[50px_1fr] md:grid-cols-[70px_1fr] relative ml-[70px]'>
+                <div class='max-h-[100px] mt-5 md:max-h-[200px] lg:h-auto lg:max-h-[400px] w-[98.7vw] overflow-y-scroll bg-slate-800 px-5'>
+                    <div class='grid grid-cols-[50px_1fr] md:grid-cols-[70px_1fr] relative ml-[70px] mt-[20px]'>
                         <div class='flex flex-col items-center'>
                             <div class='w-[50px] h-[50px] md:w-[70px] md:h-[70px] overflow-hidden rounded-full'>
                                 <img src='../asset/img/avatar/$_SESSION[pp]'>
@@ -353,26 +389,39 @@ for ($n;$n<$len;$n++){
                         </div>
                         <div class='ml-2'>
                             <div class='inline-block h-0 w-0 border-b-[10px] ml-2 border-b-[#1CD4E1] -mb-2 border-r-[9px] border-solid border-r-transparent'></div>
-                            <form action='../traitement/traitement_commentaire.php' class='bg-[#1CD4E1] text-black rounded-lg flex items-end w-[95%] text-[10px] md:text-[14px] px-2 py-1'><textarea class='w-full' rows='3'></textarea>
-                            <input type='submit' class='bg-slate-300 px-2 rounded-md border border-solid border-slate-700'></form>
+                            <form action='../traitement/traitement_commentaire.php' method='POST' class='relative bg-[#1CD4E1] text-black rounded-lg flex items-end w-[95%] text-[10px] md:text-[14px] px-2 py-1'>
+                                <div class='relative pb-5 border border-black border-solid bg-white w-full'>
+                                    <div class='relative'>
+                                        <textarea name='comm' id='textarea' class='relative border-transparent w-full'></textarea>
+                                        <span class='inline-block absolute right-px z-0 bottom-px w-4 h-4 bg-white'>
+                                        </span>
+                                    </div>
+                                    <span class='absolute bottom-0 right-0' id='compteur'>
+                                    </span>
+                                </div>
+                                <div class='relative inline-block'>
+                                    <input type='button' class='bg-slate-300 px-2 rounded-md border relative border-solid border-slate-700' value='envoyer'>
+                                    <input type='submit' class='absolute w-full h-full left-0 opacity-0 z-10' value='$_SESSION[id_user],$_GET[id_film]' name='id'>
+                                </div>
+                            </form>
                         </div>
-                    </div>";
+                    </div>";}
                 foreach($film[12] as $com){
-                    if (!empty($com)){
-                    echo"
-                    <div class='grid grid-cols-[50px_1fr] md:grid-cols-[70px_1fr] relative'>
-                        <div class='flex flex-col items-center'>
-                            <div class='w-[50px] h-[50px] md:w-[70px] md:h-[70px] overflow-hidden rounded-full'>
-                                <img src='../asset/img/avatar/$com[1]'>
+                    if (!empty($com[0])){
+                        echo"
+                        <div class='grid grid-cols-[50px_1fr] md:grid-cols-[70px_1fr] relative'>
+                            <div class='flex flex-col items-center'>
+                                <div class='w-[50px] h-[50px] md:w-[70px] md:h-[70px] overflow-hidden rounded-full'>
+                                    <img src='../asset/img/avatar/$com[1]'>
+                                </div>
+                                <span class='text-[12px]'>$com[2]</span>
                             </div>
-                            <span class='text-[12px]'>$com[2]</span>
-                        </div>
-                        <div class='ml-2 my-auto'>
-                            <div class='inline-block h-0 w-0 border-b-[10px] ml-2 border-b-[#1CD4E1] -mb-2 border-r-[9px] border-solid border-r-transparent'></div>
-                            <div class='bg-[#1CD4E1] text-black rounded-lg w-fit text-[10px] md:text-[14px] px-2 py-1'>$com[0]</div>
-                        </div>
-                    </div>";
-                    }
+                            <div class='ml-2 my-auto'>
+                                <div class='inline-block h-0 w-0 border-b-[10px] ml-2 border-b-[#1CD4E1] -mb-2 border-r-[9px] border-solid border-r-transparent'></div>
+                                <div class='bg-[#1CD4E1] text-black rounded-lg w-fit text-[10px] md:text-[14px] px-2 py-1'>$com[0]</div>
+                            </div>
+                        </div>";
+                        }
                 }
             ?>
             </div>
@@ -384,5 +433,6 @@ for ($n;$n<$len;$n++){
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.4/flowbite.min.js"></script>
     <script src="../asset/script.js"></script>
     <script src="../asset/script/film.js"></script>
+    <script src="../asset/script/compte_textarea.js"></script>
 </body>
 </html>
