@@ -18,14 +18,15 @@ try {
     } catch (\PDOException $e) {
             throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
-$sql = "SELECT DISTINCT nom,date_sorti,synopsis,affiche,nom_cat,
+$sql = "SELECT DISTINCT film.nom,date_sorti,synopsis,affiche,nom_cat,
 GROUP_CONCAT(DISTINCT nom_cat),
 GROUP_CONCAT(DISTINCT prenom_acteur,' ',nom_acteur,';',photo_acteur,';',acteurs.id_acteur),
 GROUP_CONCAT(DISTINCT prenom_real,' ',nom_real,';',photo_real,';',realisateur.id_realisateur),
 GROUP_CONCAT(DISTINCT lien_photo),
 COUNT(DISTINCT lien_photo),
 GROUP_CONCAT(DISTINCT categorie.id_categorie),
-bande_annonce   
+bande_annonce,
+GROUP_CONCAT(DISTINCT commentaire.contenu,'/',utilisateurs.avatar,'/',utilisateurs.pseudo SEPARATOR '|')
 FROM `film`
 LEFT JOIN possede ON film.id_film = possede.id_film
 LEFT JOIN categorie ON possede.id_categorie = categorie.id_categorie
@@ -34,8 +35,12 @@ LEFT JOIN acteurs ON a_un_role.id_acteur = acteurs.id_acteur
 LEFT JOIN realise ON film.id_film = realise.id_film
 LEFT JOIN realisateur ON realise.id_realisateur = realisateur.id_realisateur
 LEFT JOIN photo_film ON film.id_film = photo_film.id_film
+LEFT JOIN commentaire ON film.id_film = commentaire.id_film
+LEFT JOIN utilisateurs ON commentaire.id_user = utilisateurs.id_user
 WHERE film.id_film=?
 GROUP BY film.id_film";
+
+
 $stmt=$pdo -> prepare($sql);
 $stmt->bindParam(1,$_GET['id_film']);
 $stmt -> execute();
@@ -43,6 +48,8 @@ $film=$stmt->fetch(PDO::FETCH_NUM);
 $film[5]=explode(",",$film[5]);
 $film[6]=explode(",",$film[6]);
 $film[10]=explode(",",$film[10]);
+$film[12]=explode("|",$film[12]);
+
 $i=0;
 foreach ($film[6] as $acteur){
 $film[6][$i]=explode(";",$acteur);
@@ -54,11 +61,17 @@ foreach ($film[7] as $real){
 $film[7][$i]=explode(";",$real);
 $i+=1;
 }
+$i=0;
+foreach ($film[12] as $com){
+    $film[12][$i]=explode("/",$com);
+    $i+=1;
+    }
 $film[8]=explode(",",$film[8]);
 $i=$film[9]+1;
 if (($film[7][0][0]!="") OR ($film[6][0][0]!="") OR ($film[10][0]!="")){
     $where="WHERE ";
 }
+
 $n=0;
 $a=0;
 if ($film[7][0][0]!=""){
@@ -92,6 +105,7 @@ if ($film[10][0]!=""){
         $where.="id_categorie='".$film[10][$n][0]."' ";
     }
 }
+
 if (($film[7][0][0]!="") OR ($film[6][0][0]!="") OR ($film[10][0]!="")){
 $sql="SELECT film.id_film, film.affiche,COUNT(DISTINCT id_realisateur) AS somme_real,COUNT(DISTINCT id_acteur) AS somme_acteur,COUNT(DISTINCT id_categorie) AS somme_categorie  FROM `film` 
 LEFT JOIN realise ON film.id_film = realise.id_film
@@ -329,41 +343,38 @@ for ($n;$n<$len;$n++){
                 <iframe src='https://www.youtube.com/embed/<?php echo"$film[11] " ?>' class='md:w-[600px]' frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
             </div>
             <?php
-            echo "
-            <div class='max-h-[100px] md:max-h-[200px] lg:h-auto lg:max-h-[400px] overflow-y-scroll'>
-                <div class='grid grid-cols-[50px_1fr] md:grid-cols-[70px_1fr] relative ml-[70px]'>
-                    <div class='flex flex-col items-center'>
-                        <div class='w-[50px] h-[50px] md:w-[70px] md:h-[70px] overflow-hidden rounded-full'>
-                            <img src='../asset/img/avatar/$_SESSION[pp]'>
+                    echo "
+                <div class='max-h-[100px] mt-5 md:max-h-[200px] lg:h-auto lg:max-h-[400px] overflow-y-scroll'>
+                    <div class='grid grid-cols-[50px_1fr] md:grid-cols-[70px_1fr] relative ml-[70px]'>
+                        <div class='flex flex-col items-center'>
+                            <div class='w-[50px] h-[50px] md:w-[70px] md:h-[70px] overflow-hidden rounded-full'>
+                                <img src='../asset/img/avatar/$_SESSION[pp]'>
+                            </div>
                         </div>
-                        <span class='text-[12px]'>$_SESSION[pseudo]</span>
-                    </div>
-                    <div class='ml-2 '>
-                        <div class='inline-block h-0 w-0 border-b-[10px] ml-2 border-b-[#1CD4E1] -mb-2 border-r-[9px] border-solid border-r-transparent'></div>
-                        <form class='bg-[#1CD4E1] text-black rounded-lg w-fit text-[10px] md:text-[14px] px-2 py-1'><textarea rows='3' cols='120'></textarea></form>
-                    </div>
-                </div>";
+                        <div class='ml-2'>
+                            <div class='inline-block h-0 w-0 border-b-[10px] ml-2 border-b-[#1CD4E1] -mb-2 border-r-[9px] border-solid border-r-transparent'></div>
+                            <form action='../traitement/traitement_commentaire.php' class='bg-[#1CD4E1] text-black rounded-lg flex items-end w-[95%] text-[10px] md:text-[14px] px-2 py-1'><textarea class='w-full' rows='3'></textarea>
+                            <input type='submit' class='bg-slate-300 px-2 rounded-md border border-solid border-slate-700'></form>
+                        </div>
+                    </div>";
+                foreach($film[12] as $com){
+                    if (!empty($com)){
+                    echo"
+                    <div class='grid grid-cols-[50px_1fr] md:grid-cols-[70px_1fr] relative'>
+                        <div class='flex flex-col items-center'>
+                            <div class='w-[50px] h-[50px] md:w-[70px] md:h-[70px] overflow-hidden rounded-full'>
+                                <img src='../asset/img/avatar/$com[1]'>
+                            </div>
+                            <span class='text-[12px]'>$com[2]</span>
+                        </div>
+                        <div class='ml-2 my-auto'>
+                            <div class='inline-block h-0 w-0 border-b-[10px] ml-2 border-b-[#1CD4E1] -mb-2 border-r-[9px] border-solid border-r-transparent'></div>
+                            <div class='bg-[#1CD4E1] text-black rounded-lg w-fit text-[10px] md:text-[14px] px-2 py-1'>$com[0]</div>
+                        </div>
+                    </div>";
+                    }
+                }
             ?>
-                <div class='grid grid-cols-[50px_1fr] md:grid-cols-[70px_1fr] relative'>
-                    <div class='flex flex-col'>
-                        <img src='../asset/img/avatar/user_avatar.png'>
-                        <span class='text-[12px]'>Pseudo</span>
-                    </div>
-                    <div class='ml-2 '>
-                        <div class='inline-block h-0 w-0 border-b-[10px] ml-2 border-b-[#1CD4E1] -mb-2 border-r-[9px] border-solid border-r-transparent'></div>
-                        <div class='bg-[#1CD4E1] text-black rounded-lg w-fit text-[10px] md:text-[14px] px-2 py-1'>Super film !</div>
-                    </div>
-                </div>
-                <div class='grid grid-cols-[50px_1fr] md:grid-cols-[70px_1fr] relative'>
-                    <div class='flex flex-col'>
-                        <img src='../asset/img/avatar/user_avatar.png'>
-                        <span class='text-[12px]'>Pseudo</span>
-                    </div>
-                    <div class='ml-2 '>
-                        <div class='inline-block h-0 w-0 border-b-[10px] ml-2 border-b-[#1CD4E1] -mb-2 border-r-[9px] border-solid border-r-transparent'></div>
-                        <div class='bg-[#1CD4E1] text-black rounded-lg w-fit text-[10px] md:text-[14px] px-2 py-1'>Super film !</div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
